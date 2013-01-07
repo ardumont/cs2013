@@ -28,7 +28,7 @@
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
-  (GET "/" []
+  (GET "/*" []
        {:status 200
         :headers {"Content-Type" "text/plain"}
         :body (pr-str (my-mail))})
