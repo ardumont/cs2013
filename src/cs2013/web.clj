@@ -20,13 +20,18 @@
       (session/wrap-session)
       (basic/wrap-basic-authentication authenticated?)))
 
+(defn- my-mail
+  "Just my email so that robot do not find it"
+  []
+  (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
   (GET "/" []
        {:status 200
         :headers {"Content-Type" "text/plain"}
-        :body (pr-str (format "%s@%s" "eniotna.t" "gmail.com"))})
+        :body (pr-str (my-mail))})
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
