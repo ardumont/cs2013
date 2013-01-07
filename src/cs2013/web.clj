@@ -21,7 +21,7 @@
       (basic/wrap-basic-authentication authenticated?)))
 
 (defn- my-mail
-  "Just my email so that robot do not find it"
+  "Just my email so that robots do not find it"
   []
   (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
 
