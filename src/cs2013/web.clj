@@ -34,15 +34,15 @@
 (def deal-with-query nil)
 (defmulti deal-with-query =)
 
-(defmethod deal-with-query "Quelle+est+ton+adresse+email"
+(defmethod deal-with-query "Quelle est ton adresse email"
   [_]
   (body-response (my-mail)))
 
-(defmethod deal-with-query "Quelle+est+ton+adresse+email"
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)"
   [_]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body (pr-str (my-mail))})
+   :body (pr-str "OUI")})
 
 (defroutes app
   (ANY "/repl" {:as req}
