@@ -29,7 +29,7 @@
   [m]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body (pr-str m)})
+   :body m})
 
 (def deal-with-query nil)
 (defmulti deal-with-query identity)
