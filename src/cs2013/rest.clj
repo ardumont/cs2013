@@ -25,6 +25,7 @@
   (query :get "?q=Es+tu+heureux+de+participer(OUI/NON)")
   (query :get "?q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)")
   (query :get "?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)")
+  (query :get "?q=As+tu+bien+recu+le+premier+enonce(OUI/NON)")
   ;; ...
   (c/post "http://localhost:5000/enonce/1" {:body "some-data"}))
 

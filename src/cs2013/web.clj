@@ -45,14 +45,16 @@
 
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
-  (POST "/enonce/1" [map]
-        (t/trace map)
-        (body-response "nothing really"))
+  (POST "/enonce/1" {:as req}
+        (t/trace req)
+        (body-response (:req :body)))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
@@ -64,8 +66,9 @@
             :headers {"Content-Type" "text/html"}
             :body (slurp (io/resource "500.html"))}))))
 
+(def default-port 5000)
 (defn -main [& [port]]
-  (let [port (Integer. (or port (env :port) 5000))
+  (let [port (Integer. (or port (env :port) default-port))
         ;; TODO: heroku config:add SESSION_SECRET=$RANDOM_16_CHARS
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
@@ -75,6 +78,6 @@
                          (site {:session {:store store}}))
                      {:port port :join? false})))
 
-;; For interactive development:
-;; (.stop server)
-;; (def server (-main))
+(comment ;; For interactive development:
+  (def jetty-server (-main))
+  (.stop jetty-server))
