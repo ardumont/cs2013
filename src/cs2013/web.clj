@@ -54,7 +54,8 @@
        (deal-with-query q))
   (POST "/enonce/1" {:as req}
         (t/trace req)
-        (body-response (:req :body)))
+        (t/trace (slurp (:body req)))
+        (body-response (:body req)))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
