@@ -87,22 +87,29 @@
             :headers {"Content-Type" "text/html"}
             :body (slurp (io/resource "500.html"))}))))
 
+(def ^{:doc "Backup bodies - request badly conceived"}
+  backup-bodies (atom {}))
+
+(defn wrap-backup-body
+  "A backup middleware because else the body is consumed by the middleware wrap-params (one read and boum)"
+  [handler]
+  (fn [req]
+    (if-let [body (:body req)]
+      (swap! backup-bodies #(assoc-in % [:backup] body)))))
+
 (def default-port 5000)
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) default-port))
         ;; TODO: heroku config:add SESSION_SECRET=$RANDOM_16_CHARS
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
-                         wrap-request-logging
                          ((if (env :production)
                             wrap-error-page
-                            trace/wrap-stacktrace)))
+                            trace/wrap-stacktrace))
+                         (site {:session {:store store}})
+                         wrap-request-logging
+                         wrap-backup-body)
                      {:port port :join? false})))
-
-(comment
-  ;; previous middleware
-  (site {:session {:store store}}
-        {:multipart false}))
 
 (comment ;; For interactive development:
   (def jetty-server (-main))
