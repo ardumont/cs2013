@@ -25,13 +25,30 @@
   []
   (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
 
+(defn body-response
+  [m]
+  {:status 200
+   :headers {"Content-Type" "text/plain"}
+   :body (pr-str m)})
+
+(def deal-with-query nil)
+(defmulti deal-with-query =)
+
+(defmethod deal-with-query "Quelle+est+ton+adresse+email"
+  [_]
+  (body-response (my-mail)))
+
+(defmethod deal-with-query "Quelle+est+ton+adresse+email"
+  [_]
+  {:status 200
+   :headers {"Content-Type" "text/plain"}
+   :body (pr-str (my-mail))})
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
-  (GET "/*" []
-       {:status 200
-        :headers {"Content-Type" "text/plain"}
-        :body (pr-str (my-mail))})
+  (GET "/q" [q]
+       (deal-with-query q))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
