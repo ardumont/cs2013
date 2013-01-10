@@ -9,7 +9,8 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware.basic-authentication :as basic]
             [cemerick.drawbridge :as drawbridge]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -49,6 +50,9 @@
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
+  (POST "/enonce/1" [map]
+        (t/trace map)
+        (body-response "nothing really"))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
