@@ -47,10 +47,10 @@
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
-  (POST "/enonce/1" {:as req}
-        (t/trace req)
-        (t/trace (slurp (:body req)))
-        (body-response (:body req)))
+  (POST "/enonce/1" {body :body}
+        (let [b (slurp body)]
+          (t/trace "body: " b)
+          (body-response b)))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
@@ -60,7 +60,7 @@
 
 (defn wrap-request-logging [handler]
   (fn [{:keys [request-method uri body] :as req}]
-    (t/trace (slurp body))
+    (t/trace "request processed: " req)
     (let [resp (handler req)]
       (log "Processing %s %s" request-method uri)
       resp)))
