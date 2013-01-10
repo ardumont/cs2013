@@ -12,8 +12,6 @@
             [environ.core :refer [env]]
             [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
 
-(def bodies (atom {}))
-
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
   (= [user pass] [(env :repl-user false) (env :repl-password false)]))
@@ -24,17 +22,18 @@
       (basic/wrap-basic-authentication authenticated?)))
 
 (defn- my-mail
-  "Just my email so that robots do not find it"
+  "My email"
   []
   (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
 
 (defn- body-response
+  "Answering request"
   [m]
   {:status 200
    :headers {"Content-Type" "text/plain"}
    :body m})
 
-(def deal-with-query nil)
+(def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
 
 (defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
@@ -44,6 +43,9 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
 
+(def ^{:doc "Registering the different received post bodies"}
+  bodies (atom {}))
+
 (defn- deal-with-body
   "One function to deal with body (trace, register in atom, anything)"
   [body]
@@ -51,27 +53,30 @@
     (t/trace "body: " b)
     (swap! bodies #(assoc-in % [:enonce-1] b))))
 
+;; the main routing
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
   (POST "/enonce/1" {body :body}
-        (let [b (deal-with-body body)]
-          (body-response b)))
+        (-> body deal-with-body body-response))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
-(defn- log [msg & vals]
+(defn- log
+  "Logging function"
+  [msg & vals]
   (let [line (apply format msg vals)]
     (t/trace line)))
 
-(defn wrap-request-logging [handler]
+(defn wrap-request-logging
+  "Log request middleware"
+  [handler]
   (fn [{:keys [request-method uri] :as req}]
-    (t/trace "request processed: " req)
-    (let [resp (handler req)]
-      (log "Processing %s %s" request-method uri)
-      resp)))
+    (log "Processing %s %s" request-method uri)
+    (log "request: " req)
+    (handler req)))
 
 (defn wrap-error-page [handler]
   (fn [req]
@@ -93,9 +98,10 @@
                             trace/wrap-stacktrace)))
                      {:port port :join? false})))
 
-(comment (api)
-         (site {:session {:store store}}
-               {:multipart false}))
+(comment
+  ;; previous middleware
+  (site {:session {:store store}}
+        {:multipart false}))
 
 (comment ;; For interactive development:
   (def jetty-server (-main))
