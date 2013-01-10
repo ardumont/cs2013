@@ -34,13 +34,9 @@
 (def deal-with-query nil)
 (defmulti deal-with-query identity)
 
-(defmethod deal-with-query "Quelle est ton adresse email"
-  [_]
-  (body-response (my-mail)))
+(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
 
-(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)"
-  [_]
-  (body-response "OUI"))
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
 
 (defroutes app
   (ANY "/repl" {:as req}
