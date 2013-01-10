@@ -60,7 +60,7 @@
 
 (defn wrap-request-logging [handler]
   (fn [{:keys [request-method uri body] :as req}]
-    (t/trace body)
+    (t/trace (slurp body))
     (let [resp (handler req)]
       (log "Processing %s %s" request-method uri)
       resp)))
