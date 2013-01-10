@@ -40,6 +40,8 @@
 
 (defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
 
+(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
