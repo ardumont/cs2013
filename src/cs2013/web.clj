@@ -28,7 +28,7 @@
   []
   (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
 
-(defn body-response
+(defn- body-response
   [m]
   {:status 200
    :headers {"Content-Type" "text/plain"}
