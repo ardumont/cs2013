@@ -19,8 +19,12 @@
 
 (comment
   (url)
-  (query :get "?q=Quel+est+ton+adresse+email")
   (c/get "http://localhost:5000/?q=Quelle+est+ton+adresse+email")
+  (query :get "?q=Quelle+est+ton+adresse+email")
+  (query :get "?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)")
+  (query :get "?q=Es+tu+heureux+de+participer(OUI/NON)")
+  (query :get "?q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)")
+  (query :get "?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)")
   ;; ...
   (c/post "http://localhost:5000/enonce/1" {:body "some-data"}))
 
