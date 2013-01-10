@@ -7,7 +7,7 @@
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
 (defn url
-  [] (:remote urls))
+  [] (:local urls))
 
 (defn query
   "Query the hdt utility."
@@ -19,7 +19,7 @@
 
 (comment
   (url)
-  (c/get "http://localhost:5000/?q=Quelle+est+ton+adresse+email")
+  (query :get "?q=enonces")
   (query :get "?q=Quelle+est+ton+adresse+email")
   (query :get "?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)")
   (query :get "?q=Es+tu+heureux+de+participer(OUI/NON)")
