@@ -40,9 +40,7 @@
 
 (defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)"
   [_]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body (pr-str "OUI")})
+  (body-response "OUI"))
 
 (defroutes app
   (ANY "/repl" {:as req}
