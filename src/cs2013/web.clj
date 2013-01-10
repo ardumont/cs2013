@@ -36,15 +36,10 @@
 (defmulti deal-with-query identity)
 
 (defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
-
 (defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
-
 (defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
-
 (defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
-
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
-
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
 
 (defroutes app
