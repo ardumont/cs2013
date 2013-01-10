@@ -12,6 +12,8 @@
             [environ.core :refer [env]]
             [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
 
+(def bodies (atom {}))
+
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
   (= [user pass] [(env :repl-user false) (env :repl-password false)]))
@@ -42,14 +44,20 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
 
+(defn- deal-with-body
+  "One function to deal with body (trace, register in atom, anything)"
+  [body]
+  (let [b (slurp body)]
+    (t/trace "body: " b)
+    (swap! bodies #(assoc-in % [:enonce-1] b))))
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
   (POST "/enonce/1" {body :body}
-        (let [b (slurp body)]
-          (t/trace "body: " b)
+        (let [b (deal-with-body body)]
           (body-response b)))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
