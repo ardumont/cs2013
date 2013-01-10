@@ -32,7 +32,7 @@
    :body (pr-str m)})
 
 (def deal-with-query nil)
-(defmulti deal-with-query =)
+(defmulti deal-with-query identity)
 
 (defmethod deal-with-query "Quelle est ton adresse email"
   [_]
@@ -45,7 +45,7 @@
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
-  (GET "/q" [q]
+  (GET "/" [q]
        (deal-with-query q))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
