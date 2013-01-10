@@ -42,17 +42,52 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
 
-(defroutes app
-  (ANY "/repl" {:as req}
-       (drawbridge req))
-  (GET "/" [q]
-       (deal-with-query q))
-  (POST "/enonce/1" {body :body}
-        (let [b (slurp body)]
-          (t/trace "body: " b)
-          (body-response b)))
-  (ANY "*" []
-       (route/not-found (slurp (io/resource "404.html")))))
+(comment
+  (defn router [req]
+    (condp = (:uri req)
+      "/error" {:status 404
+                :headers {"Content-Type" "text/html"}
+                :body    (str "Error")}
+      "/?q=Quelle+est+ton+adresse+email"                                               (body-response (my-mail))
+      "/?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)"                                    (body-response "OUI")
+      "/?q=Es+tu+heureux+de+participer(OUI/NON)"                                       (body-response "OUI")
+      "/?q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)" (body-response "OUI")
+      "/?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)"                                (body-response "NON")
+      "/?q=As+tu+bien+recu+le+premier+enonce(OUI/NON)"                                 (body-response "NON")
+
+      "/info" (body-response (str "This is Ring on " (:server-name req)))
+      (body-response (str "Welcome"))))
+
+  (defn app*
+    [{:keys [uri request-method body params] :as r}]
+    (router r)
+    (condp = uri
+      "/?q=Quelle+est+ton+adresse+email" (body-response (my-mail))
+      "/?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)" (body-response "OUI")
+      "/?q=Es tu "
+      {:status  200
+       :headers {"Content-type" "text/plain"}
+       :body    (t/trace (s/join "\n" [request-method
+                                       uri
+                                       params
+                                       (t/trace "body" (-> body io/input-stream slurp))]))}))
+
+  (def app (trace (-> app*
+                      (a/wrap-basic-authentication authenticated?)
+                      wrap-params))))
+
+(comment
+  (defroutes app
+    (ANY "/repl" {:as req}
+         (drawbridge req))
+    (GET "/" [q]
+         (deal-with-query q))
+    (POST "/enonce/1" {body :body}
+          (let [b (-> body io/input-stream slurp)]
+            (t/trace "body: " b)
+            (body-response b)))
+    (ANY "*" []
+         (route/not-found (slurp (io/resource "404.html"))))))
 
 (defn- log [msg & vals]
   (let [line (apply format msg vals)]
@@ -88,4 +123,5 @@
 
 (comment ;; For interactive development:
   (def jetty-server (-main))
-  (.stop jetty-server))
+  (.stop jetty-server)
+  )
