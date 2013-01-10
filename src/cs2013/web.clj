@@ -54,6 +54,17 @@
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
+(defn- log [msg & vals]
+  (let [line (apply format msg vals)]
+    (t/trace line)))
+
+(defn wrap-request-logging [handler]
+  (fn [{:keys [request-method uri body] :as req}]
+    (t/trace body)
+    (let [resp (handler req)]
+      (log "Processing %s %s" request-method uri)
+      resp)))
+
 (defn wrap-error-page [handler]
   (fn [req]
     (try (handler req)
@@ -68,6 +79,7 @@
         ;; TODO: heroku config:add SESSION_SECRET=$RANDOM_16_CHARS
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
+                         wrap-request-logging
                          ((if (env :production)
                             wrap-error-page
                             trace/wrap-stacktrace))
