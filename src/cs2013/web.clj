@@ -38,6 +38,8 @@
 
 (defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
 
+(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
+
 (defroutes app
   (ANY "/repl" {:as req}
        (drawbridge req))
