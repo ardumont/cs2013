@@ -27,7 +27,8 @@
   (query :get "?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)")
   (query :get "?q=As+tu+bien+recu+le+premier+enonce(OUI/NON)")
   ;; ...
-  (c/post "http://localhost:5000/enonce/1" {:body "some-data"}))
+  (c/post "http://localhost:5000/enonce/1" {:body "some-data"
+                                            :headers {"Content-Type" "application/x-www-form-url-encoded"}}))
 
 ;; (h/load-hook #'wikeo-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))

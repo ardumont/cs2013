@@ -1,6 +1,6 @@
 (ns cs2013.web
   (:require [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
-            [compojure.handler :refer [site]]
+            [compojure.handler :refer [site api]]
             [compojure.route :as route]
             [clojure.java.io :as io]
             [ring.middleware.stacktrace :as trace]
@@ -59,7 +59,7 @@
     (t/trace line)))
 
 (defn wrap-request-logging [handler]
-  (fn [{:keys [request-method uri body] :as req}]
+  (fn [{:keys [request-method uri] :as req}]
     (t/trace "request processed: " req)
     (let [resp (handler req)]
       (log "Processing %s %s" request-method uri)
@@ -82,9 +82,12 @@
                          wrap-request-logging
                          ((if (env :production)
                             wrap-error-page
-                            trace/wrap-stacktrace))
-                         (site {:session {:store store}}))
+                            trace/wrap-stacktrace)))
                      {:port port :join? false})))
+
+(comment (api)
+         (site {:session {:store store}}
+               {:multipart false}))
 
 (comment ;; For interactive development:
   (def jetty-server (-main))
