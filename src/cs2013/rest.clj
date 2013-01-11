@@ -29,7 +29,9 @@
   ;; ...
   (query :post "/enonce/1" {:body "some-data"
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}})
-  )
+
+  (query :post "/enonce/1" {:body "some-data"
+                            :headers {"Content-Type" "application/octet-stream"}}))
 
 ;; (h/load-hook #'wikeo-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))
