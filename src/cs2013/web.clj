@@ -83,7 +83,7 @@
 
 (defn wrap-correct-content-type [handler]
   (fn [req]
-    (if (= "application/www-form-urlencoded" (:content-type req))
+    (if (= "application/x-www-form-urlencoded" (:content-type req))
       (handler (assoc req :content-type "application/json"))
       (handler req))))
 
