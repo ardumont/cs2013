@@ -11,7 +11,8 @@
                  [environ                   "0.2.1"]
                  [com.cemerick/drawbridge   "0.0.6"]
                  [clj-http                  "0.6.3"]
-                 [org.clojure/tools.trace   "0.7.3"]]
+                 [org.clojure/tools.trace   "0.7.3"]
+                 [midje                     "1.4.0"]]
   :min-lein-version "2.0.0"
   :plugins [[environ/environ.lein "0.2.1"]]
   :hooks [environ.leiningen.hooks]
