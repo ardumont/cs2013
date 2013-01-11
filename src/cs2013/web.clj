@@ -49,9 +49,11 @@
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
-  [{:keys [body]}]
-  ;;      (swap! bodies #(assoc-in % [:enonce-1] b))
-  (t/trace "original-body" body))
+  [{:keys [body]} key]
+  (let [b (slurp body)]
+    (t/trace "body: " b)
+    (swap! bodies #(assoc-in % [key] b))
+    b))
 
 ;; the main routing
 (defroutes app
@@ -60,8 +62,7 @@
   (GET "/" [q]
        (deal-with-query q))
   (POST "/enonce/1" {:as req}
-        (t/trace "req" req)
-        (-> req deal-with-body body-response))
+        (-> req (deal-with-body :enonce-1) body-response))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
