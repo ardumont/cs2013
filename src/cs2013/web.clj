@@ -66,18 +66,11 @@
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
-(defn- log
-  "Logging function"
-  [msg & vals]
-  (let [line (apply format msg vals)]
-    (t/trace line)))
-
 (defn wrap-request-logging
   "Log request middleware"
   [handler]
-  (fn [{:keys [request-method uri] :as req}]
-    (log "Processing %s %s" request-method uri)
-    (log "request: " req)
+  (fn [req]
+    (t/trace req)
     (handler req)))
 
 (defn wrap-error-page [handler]
