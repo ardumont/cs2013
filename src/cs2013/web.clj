@@ -49,11 +49,10 @@
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
 
 (defn- deal-with-body
-  "One function to deal with body (trace, register in atom, anything)"
-  [body]
-  (let [b (slurp body)]
-    (t/trace "body: " b)
-    (swap! bodies #(assoc-in % [:enonce-1] b))))
+  "One function to deal with body/original-body (trace, register in atom, anything)"
+  [{:keys [original-body]}]
+  ;;      (swap! bodies #(assoc-in % [:enonce-1] b))
+  (t/trace "original-body" original-body))
 
 ;; the main routing
 (defroutes app
