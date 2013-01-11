@@ -49,9 +49,9 @@
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
-  [{:keys [original-body]}]
+  [{:keys [body]}]
   ;;      (swap! bodies #(assoc-in % [:enonce-1] b))
-  (t/trace "original-body" original-body))
+  (t/trace "original-body" body))
 
 ;; the main routing
 (defroutes app
@@ -87,17 +87,11 @@
             :headers {"Content-Type" "text/html"}
             :body (slurp (io/resource "500.html"))}))))
 
-(defn wrap-backup-body
-  "A backup middleware because else the body is consumed by the middleware wrap-params (one read and boum)"
-  [handler]
+(defn wrap-correct-content-type [handler]
   (fn [req]
-    (let [encoding (:character-encoding req)]
-      (if-let [b (-> req :body (slurp :encoding encoding))]
-        (let [headers (merge (:headers req) {"content-length" "0"})]
-          (handler
-           (merge req {:original-body b
-                       :content-length "0"
-                       :headers headers})))))))
+    (if (= "application/www-form-urlencoded" (:content-type req))
+      (handler (assoc req :content-type "application/json"))
+      (handler req))))
 
 (def default-port 5000)
 (defn -main [& [port]]
@@ -110,7 +104,7 @@
                             trace/wrap-stacktrace))
                          (site {:session {:store store}})
                          wrap-request-logging
-                         wrap-backup-body)
+                         wrap-correct-content-type)
                      {:port port :join? false})))
 
 (comment ;; interactive dev
