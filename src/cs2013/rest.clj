@@ -30,6 +30,7 @@
   (query :post "/enonce/1" {:body "some-data-with-x-www-form-url-encoded-and-encoding"
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}
                             :encoding "UTF-8"})
+
   (query :post "/enonce/1" {:body "some-data-and-encoding"
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}
                             :encoding nil})
