@@ -33,6 +33,13 @@
    :headers {"Content-Type" "text/plain"}
    :body m})
 
+(defn- post-body-response
+  "Answering request"
+  [m]
+  {:status 201
+   :headers {"Content-Type" "text/plain"}
+   :body m})
+
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
 
@@ -62,7 +69,7 @@
   (GET "/" [q]
        (deal-with-query q))
   (POST "/enonce/1" {:as req}
-        (-> req (deal-with-body :enonce-1) body-response))
+        (-> req (deal-with-body :enonce-1) post-body-response))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
