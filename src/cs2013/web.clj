@@ -10,8 +10,7 @@
             [ring.middleware.basic-authentication :as basic]
             [cemerick.drawbridge :as drawbridge]
             [environ.core :refer [env]]
-            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t])
-  (:import java.io.ByteArrayInputStream))
+            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
