@@ -94,8 +94,10 @@
   (fn [req]
     (let [encoding (:character-encoding req)]
       (if-let [b (-> req :body (slurp :encoding encoding))]
-        (do
-          (merge-with merge req {:original-body b :body b}))))))
+        (let [headers (merge (:headers req) {"content-length" "0"})]
+          (merge req {:original-body b
+                      :content-length "0"
+                      :headers headers}))))))
 
 (def default-port 5000)
 (defn -main [& [port]]
