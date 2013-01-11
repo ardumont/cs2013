@@ -49,8 +49,8 @@
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
-  [{:keys [body]} key]
-  (let [b (slurp body)]
+  [{:keys [body encoding]} key]
+  (let [b (slurp body :encoding encoding)]
     (t/trace "body: " b)
     (swap! bodies #(assoc-in % [key] b))
     b))
