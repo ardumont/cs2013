@@ -51,7 +51,7 @@
 (defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
-(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
 
 (defn- deal-with-body
