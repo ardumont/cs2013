@@ -59,7 +59,7 @@
   [{:keys [body encoding]} key]
   (let [b (slurp body :encoding encoding)]
     (t/trace "body: " b)
-    (swap! bodies #(assoc-in % [key] b))
+    (swap! bodies #(update-in % [key] (fn [_] b)))
     b))
 
 ;; the main routing
