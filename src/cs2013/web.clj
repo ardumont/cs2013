@@ -113,8 +113,9 @@
                          wrap-backup-body)
                      {:port port :join? false})))
 
-(if jetty-server
-  (do
-    (.stop jetty-server)
-    (def jetty-server (-main)))
-  (def jetty-server (-main)))
+(comment ;; interactive dev
+  (if jetty-server
+    (do
+      (.stop jetty-server)
+      (def jetty-server (-main)))
+    (def jetty-server (-main))))
