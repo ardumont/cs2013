@@ -10,7 +10,8 @@
             [ring.middleware.basic-authentication :as basic]
             [cemerick.drawbridge :as drawbridge]
             [environ.core :refer [env]]
-            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
+            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t])
+  (:import java.io.ByteArrayInputStream))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -33,6 +34,9 @@
    :headers {"Content-Type" "text/plain"}
    :body m})
 
+(def ^{:doc "post bodies registered"}
+  bodies (atom {}))
+
 (def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
 
@@ -43,9 +47,6 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
-
-(def ^{:doc "Registering the different received post bodies"}
-  bodies (atom {}))
 
 (defn- deal-with-body
   "One function to deal with body (trace, register in atom, anything)"
@@ -60,7 +61,7 @@
        (drawbridge req))
   (GET "/" [q]
        (deal-with-query q))
-  (POST "/enonce/1" {body :body}
+  (POST "/enonce/1" {body :original-body}
         (-> body deal-with-body body-response))
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
@@ -87,15 +88,14 @@
             :headers {"Content-Type" "text/html"}
             :body (slurp (io/resource "500.html"))}))))
 
-(def ^{:doc "Backup bodies - request badly conceived"}
-  backup-bodies (atom {}))
-
 (defn wrap-backup-body
   "A backup middleware because else the body is consumed by the middleware wrap-params (one read and boum)"
   [handler]
   (fn [req]
-    (if-let [body (:body req)]
-      (swap! backup-bodies #(assoc-in % [:backup] body)))))
+    (let [encoding (:character-encoding req)]
+      (if-let [b (-> req :body (slurp :encoding encoding))]
+        (do
+          (merge-with merge req {:original-body b :body b}))))))
 
 (def default-port 5000)
 (defn -main [& [port]]
@@ -111,6 +111,8 @@
                          wrap-backup-body)
                      {:port port :join? false})))
 
-(comment ;; For interactive development:
-  (def jetty-server (-main))
-  (.stop jetty-server))
+(if jetty-server
+  (do
+    (.stop jetty-server)
+    (def jetty-server (-main)))
+  (def jetty-server (-main)))
