@@ -7,7 +7,7 @@
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
 (defn url
-  [] (:local urls))
+  [] (:remote urls))
 
 (defn query
   "Query the hdt utility."
@@ -27,10 +27,14 @@
   (query :get "?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)")
   (query :get "?q=As+tu+bien+recu+le+premier+enonce(OUI/NON)")
   ;; ...
-  (query :post "/enonce/1" {:body "some-data"
-                            :headers {"Content-Type" "application/x-www-form-url-encoded"}})
+  (query :post "/enonce/1" {:body "some-data-with-x-www-form-url-encoded-and-encoding"
+                            :headers {"Content-Type" "application/x-www-form-url-encoded"}
+                            :encoding "UTF-8"})
+  (query :post "/enonce/1" {:body "some-data-and-encoding"
+                            :headers {"Content-Type" "application/x-www-form-url-encoded"}
+                            :encoding nil})
 
-  (query :post "/enonce/1" {:body "some-data"
+  (query :post "/enonce/1" {:body "some-data-octet-stream"
                             :headers {"Content-Type" "application/octet-stream"}}))
 
 ;; (h/load-hook #'wikeo-query #'query #'post-cnt)
