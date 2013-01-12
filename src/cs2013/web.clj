@@ -4,13 +4,10 @@
             [compojure.handler :refer [site api]]
             [compojure.route :as route]
             [clojure.java.io :as io]
+            [environ.core :refer [env]]
             [ring.middleware.stacktrace :as trace]
-            [ring.middleware.session :as session]
             [ring.middleware.session.cookie :as cookie]
             [ring.adapter.jetty :as jetty]
-            [ring.middleware.basic-authentication :as basic]
-            [cemerick.drawbridge :as drawbridge]
-            [environ.core :refer [env]]
             [clojure.tools.trace :only [trace] :as t]
             [cs2013.enonce1 :as enonce1]
             [clojure.data.json :as json]
@@ -19,15 +16,6 @@
             [cs2013.response :as r]
             [cs2013.operations :as o]
             [cs2013.middleware :as w]))
-
-(defn- authenticated? [user pass]
-  ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
-  (= [user pass] [(env :repl-user false) (env :repl-password false)]))
-
-(def ^:private drawbridge
-  (-> (drawbridge/ring-handler)
-      (session/wrap-session)
-      (basic/wrap-basic-authentication authenticated?)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Answering queries 'q='
@@ -84,7 +72,7 @@
 (defroutes app
   ;; play with remote repl
   (ANY "/repl" {:as req}
-       (drawbridge req))
+       (w/drawbridge req))
 
   ;; deal with questions
   (GET "/" [q]

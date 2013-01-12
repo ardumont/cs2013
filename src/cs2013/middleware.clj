@@ -1,7 +1,20 @@
 (ns ^{:doc "Middleware"}
   cs2013.middleware
   (:require [clojure.tools.trace :only [trace] :as t]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [environ.core :refer [env]]
+            [cemerick.drawbridge :as drawbridge]
+            [ring.middleware.session :as session]
+            [ring.middleware.basic-authentication :as basic]))
+
+(defn authenticated? [user pass]
+  ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
+  (= [user pass] [(env :repl-user false) (env :repl-password false)]))
+
+(def drawbridge
+  (-> (drawbridge/ring-handler)
+      (session/wrap-session)
+      (basic/wrap-basic-authentication authenticated?)))
 
 (defn wrap-request-logging
   "Log request middleware"
