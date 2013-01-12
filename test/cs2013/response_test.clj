@@ -3,6 +3,8 @@
         [cs2013.response]))
 
 (fact
- (body-response "body-message")      => {:status 200 :headers {"Content-Type" "text/plain"} :body "body-message"}
+  (with-status-content-type-message 200 "some-headers" "body-message") => {:status 200 :headers {"Content-Type" "some-headers"} :body "body-message"}
 
- (post-body-response "body-message") => {:status 201 :headers {"Content-Type" "text/plain"} :body "body-message"})
+  (body-response "body-message")      => {:status 200 :headers {"Content-Type" "text/plain"} :body "body-message"}
+
+  (post-body-response "body-message") => {:status 201 :headers {"Content-Type" "text/plain"} :body "body-message"})

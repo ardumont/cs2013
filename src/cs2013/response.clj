@@ -4,13 +4,16 @@
 (defn body-response
   "Answering request in text/plain with the message"
   [m]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body m})
+  (with-status-content-type-message 200 "text/plain" m))
 
 (defn post-body-response
   "Answering request to post"
   [m]
-  {:status 201
-   :headers {"Content-Type" "text/plain"}
+  (with-status-content-type-message 201 "text/plain" m))
+
+(defn with-status-content-type-message
+  "Answering a request with message and content-type"
+  [s h m]
+  {:status s
+   :headers {"Content-Type" h}
    :body m})
