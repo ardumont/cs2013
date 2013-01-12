@@ -9,7 +9,7 @@
 
 (defn url
   "The main url setup, switch between :remote and :local accordingly"
-  [] (:local urls))
+  [] (:remote urls))
 
 (defn query
   "Query the server."
@@ -43,4 +43,6 @@
   (query :get "/scalaskel/change/1" {:accept :json})
   (query :get "?q=1+1")
   (query :get "?q=2*2")
-  (query :get "?q=(1+9)*9"))
+  (query :get "?q=(1+9)*9")
+  (query :get "?q=(1+2)*2")
+  (query :get "?q=(1+2)/2"))
