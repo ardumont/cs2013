@@ -35,8 +35,26 @@
 ;; L'ordre des valeurs dans le tableau json, ainsi que le formatage n'a pas d'importance a partir du moment ou c'est du json valide, il s'entends.
 ;; Bon courage !
 
-{:grosDessimal 100
- :foo           1
- :bar           7
- :qix           11
- :baz           21}
+(def cur {:foo           1
+          :bar           7
+          :qix           11
+          :baz           21})
+
+(defn decomp
+  "Compute the decomposition of foo/bar/qix/baz"
+  [n]
+  (into []
+        (let [r (range 0 (inc n))]
+          (for [w r
+                x r
+                y r
+                z r
+                :when (= n (+ (* 1 w) (* 7 x) (* 11 y) (* 21 z)))]
+            {:foo w
+             :bar x
+             :qix y
+             :baz z}))))
+
+(comment
+  (map decomp (range 0 10))
+  (decomp 100))
