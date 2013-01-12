@@ -102,7 +102,7 @@
 
   ;; everything else
   (ANY "*" []
-       (route/not-found (slurp (io/resource "404.html")))))
+       (-> "404.html" io/resource slurp route/not-found)))
 
 (def default-port 5000)
 (defn -main [& [port]]

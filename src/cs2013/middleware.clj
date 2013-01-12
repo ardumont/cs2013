@@ -6,9 +6,7 @@
 (defn wrap-request-logging
   "Log request middleware"
   [handler]
-  (fn [req]
-    (t/trace req)
-    (handler req)))
+  (fn [req] (-> req t/trace handler)))
 
 (defn wrap-error-page [handler]
   "A middleware to deal with error page"
@@ -17,7 +15,7 @@
          (catch Exception e
            {:status 500
             :headers {"Content-Type" "text/html"}
-            :body (slurp (io/resource "500.html"))}))))
+            :body (-> "500.html" io/resource slurp)}))))
 
 (defn wrap-correct-content-type [handler]
   "A middleware to fix the forgotten content-type (thus resulting in consuming the body later)"
