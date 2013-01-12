@@ -30,6 +30,4 @@
         z (char2int c)
         res (-> ((operators op) x y)
                 ((operators op2) z))]
-    (if (= op2 \/)
-      (float res)
-      res)))
+    res))
