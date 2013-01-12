@@ -17,25 +17,29 @@
             [cs2013.operations :as o]
             [cs2013.middleware :as m]))
 
+;; small trick when using demulti (not for prod)
+(if (-> env :production not)
+  (def deal-with-query nil)
+  (def deal-with-operation nil))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Answering queries 'q='
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
 
-(defmethod deal-with-query "Quelle est ton adresse email" [_] (r/body-response (mail/my)))
-(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (r/body-response "OUI"))
-(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (r/body-response "OUI"))
+(defmethod deal-with-query "Quelle est ton adresse email" [_]                                               (r/body-response (mail/my)))
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_]                                    (r/body-response "OUI"))
+(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_]                                       (r/body-response "OUI"))
 (defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (r/body-response "OUI"))
-(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (r/body-response "NON"))
-(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (r/body-response "OUI"))
+(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_]                                (r/body-response "NON"))
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_]                                 (r/body-response "OUI"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registering bodies problems inside atom
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; not perfect because we lost the registered request as each deployment but better than nothing at the moment
+;; not perfect because we lost the registered post requests as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
 
@@ -45,9 +49,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; query operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; deal with operation query
-(def deal-with-operation nil)
 
 ;; dispatch on the presence of the \(
 (defmulti deal-with-operation (fn [q] (some #{\(} q)))
