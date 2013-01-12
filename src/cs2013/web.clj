@@ -10,7 +10,9 @@
             [ring.middleware.basic-authentication :as basic]
             [cemerick.drawbridge :as drawbridge]
             [environ.core :refer [env]]
-            [clojure.tools.trace :only [trace deftrace trace-forms trace-ns untrace-ns trace-vars] :as t]))
+            [clojure.tools.trace :only [trace] :as t]
+            [cs2013.enonce1 :as enonce1]
+            [clojure.data.json :as json]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -65,12 +67,20 @@
 
 ;; the main routing
 (defroutes app
+  ;; play with remote repl
   (ANY "/repl" {:as req}
        (drawbridge req))
+  ;; deal with naive questions
   (GET "/" [q]
        (deal-with-query q))
+  (GET "/scalaskel/change/:n" [n]
+       {:status 200
+        :headers {"Content-Type" "application/json"}
+        :body (-> n read-string enonce1/decomp json/write-str)})
+  ;; reception of the problem
   (POST "/enonce/1" {:as req}
         (-> req (deal-with-body :enonce-1) post-body-response))
+  ;; everything else
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
