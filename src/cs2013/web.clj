@@ -15,7 +15,8 @@
             [clojure.data.json :as json]
             [clojure.string :as str]
             [cs2013.mail :as mail]
-            [cs2013.response :as r]))
+            [cs2013.response :as r]
+            [cs2013.operations :as o]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -25,6 +26,10 @@
   (-> (drawbridge/ring-handler)
       (session/wrap-session)
       (basic/wrap-basic-authentication authenticated?)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Answering queries 'q='
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
@@ -36,55 +41,34 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (r/body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (r/body-response "OUI"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; registering bodies problems inside atom
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; not perfect because we lost the registered request as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
 
+;; a route to expose the problems registered
 (defmethod deal-with-query "enonces" [_] (r/body-response (pr-str @bodies)))
 
-(defn char2int
-  "Compute a char inside \"0123456789\" into its integer value"
-  [c]
-  (- (int c) (int \0)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; query operations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; deal with operation query
 (def deal-with-operation nil)
+
+;; dispatch on the presence of the \(
 (defmulti deal-with-operation (fn [q] (some #{\(} q)))
 
-(def ^{:doc "Map of coding operations translations"}
-  operators {\space +
-             \* *
-             \- -
-             \/ /})
+;; naive operations
+(defmethod deal-with-operation nil [q] (o/compute-simple-operation q))
 
-(defn compute-simple-operation
-  "Compute a simple operation of the form 1*1"
-  [q]
-  (let [[a op b] q
-        x (char2int a)
-        y (char2int b)]
-    ((operators op) x y)))
+;; those with \( \)
+(defmethod deal-with-operation \(  [q] (-> q o/compute-operation float))
 
-(defmethod deal-with-operation nil
-  [q]
-  (compute-simple-operation q))
-
-(defn compute-operation
-  "Compute an operation of the (1*1)*10"
-  [q]
-  (let [[_ a op b _ op2 c] q
-        x (char2int a)
-        y (char2int b)
-        z (char2int c)]
-    (-> ((operators op) x y) ((operators op2) z))))
-
-(defmethod deal-with-operation \(
-  [q]
-  (-> q compute-operation float))
-
-(defmethod deal-with-query :default
-  [q]
-  (-> q deal-with-operation str r/body-response))
+(defmethod deal-with-query :default [q] (-> q deal-with-operation str r/body-response))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"

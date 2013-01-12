@@ -22,6 +22,7 @@
  (deal-with-query "As tu bien recu le premier enonce(OUI/NON)")  => {:status 200
                                                                      :headers {"Content-Type" "text/plain"}
                                                                      :body "OUI"}
+
  ;; this method does not support between one digit, one operator, one digit
  (deal-with-query "1 1") => {:status 200
                              :headers {"Content-Type" "text/plain"}
@@ -60,20 +61,7 @@
                               :headers {"Content-Type" "text/plain"}
                               :body "9"})
 
-(fact "compute-simple-operatoin - only simple expression, space is +, one digit, only support for + *"
-   (compute-simple-operation "1 1") => 2
-   (compute-simple-operation "1*1") => 1
-   (compute-simple-operation "9*9") => 81)
-
-(fact "compute-operation - beware the current implementation are limited to such format (one digit only too) "
-   (compute-operation "(1 2) 9") => 12
-   (compute-operation "(1 2)*9") => 27
-   (compute-operation "(1 2)/2") => 3/2)
-
 (fact
  (deal-with-query "(1 2)/2") => {:status 200
                                  :headers {"Content-Type" "text/plain"}
                                  :body "1.5"})
-
-(fact
- (map char2int "0123456789") => (range 0 10))
