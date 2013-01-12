@@ -88,15 +88,15 @@
   (GET "/" [q]
        (deal-with-query q))
 
+  ;; reception of the problem
+  (POST "/enonce/1" {:as req}
+        (-> req (deal-with-body :enonce-1) r/post-body-response))
+
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (-> n read-string enonce1/decomp json/write-str)})
-
-  ;; reception of the problem
-  (POST "/enonce/1" {:as req}
-        (-> req (deal-with-body :enonce-1) r/post-body-response))
 
   ;; everything else
   (ANY "*" []
