@@ -27,5 +27,9 @@
   (let [[_ a op b _ op2 c] q
         x (char2int a)
         y (char2int b)
-        z (char2int c)]
-    (-> ((operators op) x y) ((operators op2) z))))
+        z (char2int c)
+        res (-> ((operators op) x y)
+                ((operators op2) z))]
+    (if (= op2 \/)
+      (float res)
+      res)))
