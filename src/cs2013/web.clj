@@ -1,21 +1,23 @@
 (ns ^{:doc "Server web to expose the response to problems"}
   cs2013.web
-  (:require [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
-            [compojure.handler :refer [site api]]
-            [compojure.route :as route]
-            [clojure.java.io :as io]
+  (:require [compojure
+             [core        :refer [defroutes GET PUT POST DELETE ANY]]
+             [handler     :refer [site api]]
+             [route                            :as route]]
             [environ.core :refer [env]]
-            [ring.middleware.stacktrace :as trace]
-            [ring.middleware.session.cookie :as cookie]
-            [ring.adapter.jetty :as jetty]
+            [ring.middleware.stacktrace        :as trace]
+            [ring.middleware.session.cookie    :as cookie]
+            [ring.adapter.jetty                :as jetty]
             [clojure.tools.trace :only [trace] :as t]
-            [cs2013.enonce1 :as enonce1]
-            [clojure.data.json :as json]
-            [clojure.string :as str]
-            [cs2013.mail :as mail]
-            [cs2013.response :as r]
-            [cs2013.operations :as o]
-            [cs2013.middleware :as m]))
+            [clojure.java.io                   :as io]
+            [clojure.data.json                 :as json]
+            [clojure.string                    :as str]
+            [cs2013
+             [enonce1                          :as e1]
+             [mail                             :as mail]
+             [response                         :as r]
+             [operations                       :as o]
+             [middleware                       :as m]]))
 
 ;; small trick when using demulti (not for prod)
 (if (-> env :production not)
@@ -85,7 +87,7 @@
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
-        (-> n read-string enonce1/decomposition json/write-str r/json-body-response))
+        (-> n read-string e1/decomposition json/write-str r/json-body-response))
 
   ;; everything else
   (ANY "*" []
