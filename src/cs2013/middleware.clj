@@ -1,10 +1,10 @@
 (ns ^{:doc "Middleware"}
   cs2013.middleware
-  (:require [clojure.tools.trace :only [trace] :as t]
-            [clojure.java.io :as io]
+  (:require [clojure.tools.trace :only [trace]    :as t]
+            [clojure.java.io                      :as io]
             [environ.core :refer [env]]
-            [cemerick.drawbridge :as drawbridge]
-            [ring.middleware.session :as session]
+            [cemerick.drawbridge                  :as drawbridge]
+            [ring.middleware.session              :as session]
             [ring.middleware.basic-authentication :as basic]))
 
 (defn authenticated? [user pass]
