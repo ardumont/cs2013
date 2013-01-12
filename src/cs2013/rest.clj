@@ -38,7 +38,8 @@
   (query :post "/enonce/1" {:body "some-data-octet-stream"
                             :headers {"Content-Type" "application/octet-stream"}})
 
-  (query :get "/scalaskel/change/1" {:accept :json}))
+  (query :get "/scalaskel/change/1" {:accept :json})
+  (query :get "?q=1+1"))
 
 ;; (h/load-hook #'some-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))

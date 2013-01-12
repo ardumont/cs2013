@@ -56,6 +56,7 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
+(defmethod deal-with-query "1 1" [_] (body-response "2"))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
