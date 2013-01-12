@@ -15,7 +15,7 @@
             [cs2013.mail :as mail]
             [cs2013.response :as r]
             [cs2013.operations :as o]
-            [cs2013.middleware :as w]))
+            [cs2013.middleware :as m]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Answering queries 'q='
@@ -72,7 +72,7 @@
 (defroutes app
   ;; play with remote repl
   (ANY "/repl" {:as req}
-       (w/drawbridge req))
+       (m/drawbridge req))
 
   ;; deal with questions
   (GET "/" [q]
@@ -97,11 +97,11 @@
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
                          ((if (env :production)
-                            w/wrap-error-page
+                            m/wrap-error-page
                             trace/wrap-stacktrace))
                          (site {:session {:store store}})
-                         w/wrap-request-logging
-                         w/wrap-correct-content-type)
+                         m/wrap-request-logging
+                         m/wrap-correct-content-type)
                      {:port port :join? false})))
 
 (comment ;; interactive dev
