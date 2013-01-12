@@ -86,11 +86,11 @@
 
 (defmethod deal-with-operation \(
   [q]
-  (compute-operation q))
+  (-> q compute-operation float))
 
 (defmethod deal-with-query :default
   [q]
-  (-> q deal-with-operation float str body-response))
+  (-> q deal-with-operation str body-response))
 
 (defn- post-body-response
   "Answering request"
