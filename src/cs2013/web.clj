@@ -13,7 +13,8 @@
             [clojure.tools.trace :only [trace] :as t]
             [cs2013.enonce1 :as enonce1]
             [clojure.data.json :as json]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cs2013.mail :as mail]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -23,11 +24,6 @@
   (-> (drawbridge/ring-handler)
       (session/wrap-session)
       (basic/wrap-basic-authentication authenticated?)))
-
-(defn- my-mail
-  "My email"
-  []
-  (format "%s.%s@%s.%s" "eniotna" "t" "gmail" "com"))
 
 (defn- body-response
   "Answering request"
@@ -39,7 +35,7 @@
 (def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
 
-(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
+(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (mail/my)))
 (defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))

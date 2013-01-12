@@ -6,7 +6,7 @@
 (fact
  (deal-with-query "Quelle est ton adresse email") => {:status 200
                                                       :headers {"Content-Type" "text/plain"}
-                                                      :body (str "eniotna" "." "t" "@" "gmail" "." "com")}
+                                                      :body (apply str (reverse ["com" "." "gmail" "@" "t" "." "eniotna"]))}
 
  (deal-with-query "Es tu abonne a la mailing list(OUI/NON)") => {:status 200
                                                                  :headers {"Content-Type" "text/plain"}
