@@ -90,15 +90,12 @@
   (ANY "*" []
        (-> "404.html" io/resource slurp route/not-found)))
 
-(def default-port 5000)
 (defn -main [& [port]]
-  (let [port (Integer. (or port (env :port) default-port))
+  (let [port (Integer. (or port (env :port) 5000))
         ;; TODO: heroku config:add SESSION_SECRET=$RANDOM_16_CHARS
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
-                         ((if (env :production)
-                            m/wrap-error-page
-                            trace/wrap-stacktrace))
+                         ((if (env :production) m/wrap-error-page trace/wrap-stacktrace))
                          (site {:session {:store store}})
                          m/wrap-request-logging
                          m/wrap-correct-content-type)
