@@ -16,7 +16,8 @@
             [clojure.string :as str]
             [cs2013.mail :as mail]
             [cs2013.response :as r]
-            [cs2013.operations :as o]))
+            [cs2013.operations :as o]
+            [cs2013.middleware :as w]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -102,27 +103,6 @@
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
 
-(defn wrap-request-logging
-  "Log request middleware"
-  [handler]
-  (fn [req]
-    (t/trace req)
-    (handler req)))
-
-(defn wrap-error-page [handler]
-  (fn [req]
-    (try (handler req)
-         (catch Exception e
-           {:status 500
-            :headers {"Content-Type" "text/html"}
-            :body (slurp (io/resource "500.html"))}))))
-
-(defn wrap-correct-content-type [handler]
-  (fn [req]
-    (if (= "application/x-www-form-urlencoded" (:content-type req))
-      (handler (assoc req :content-type "application/json"))
-      (handler req))))
-
 (def default-port 5000)
 (defn -main [& [port]]
   (let [port (Integer. (or port (env :port) default-port))
@@ -130,11 +110,11 @@
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
                          ((if (env :production)
-                            wrap-error-page
+                            w/wrap-error-page
                             trace/wrap-stacktrace))
                          (site {:session {:store store}})
-                         wrap-request-logging
-                         wrap-correct-content-type)
+                         w/wrap-request-logging
+                         w/wrap-correct-content-type)
                      {:port port :join? false})))
 
 (comment ;; interactive dev
