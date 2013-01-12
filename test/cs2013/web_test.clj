@@ -56,6 +56,15 @@
                              :headers {"Content-Type" "text/plain"}
                              :body "4"})
 
+(fact "compute-simple-operatoin - only simple expression, space is +, one digit, only support for + *"
+   (compute-simple-operation "1 1") => 2
+   (compute-simple-operation "1*1") => 1
+   (compute-simple-operation "9*9") => 81)
+
+(fact "compute-operation - beware the current implementation are limited to such format (one digit only too) "
+   (compute-operation "(1 2) 9") => 12
+   (compute-operation "(1 2)*9") => 27)
+
 (fact ;; limit case
  (deal-with-query "9*10") => {:status 200
                               :headers {"Content-Type" "text/plain"}
