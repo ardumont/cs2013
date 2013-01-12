@@ -35,6 +35,21 @@
    :headers {"Content-Type" "text/plain"}
    :body message})
 
+(def deal-with-query nil);; small trick when using demulti
+(defmulti deal-with-query identity)
+
+(defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
+
+(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
+(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
+(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
+(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
+
+(defmethod deal-with-query "1 1" [_] (body-response "2"))
+(defmethod deal-with-query "2 2" [_] (body-response "4"))
+
 (defn- post-body-response
   "Answering request"
   [m]
@@ -45,19 +60,6 @@
 ;; not perfect because we lost the registered request as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
-
-(def deal-with-query nil);; small trick when using demulti
-(defmulti deal-with-query identity)
-
-(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (my-mail)))
-(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
-(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
-(defmethod deal-with-query "1 1" [_] (body-response "2"))
-(defmethod deal-with-query "2 2" [_] (body-response "4"))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
