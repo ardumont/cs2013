@@ -14,6 +14,7 @@
                  [org.clojure/tools.trace   "0.7.3"]
                  [org.clojure/data.json     "0.2.0"]
                  [midje                     "1.4.0"]]
+  :dev-dependencies [[lein-midje "2.0.4"]]
   :min-lein-version "2.0.0"
   :plugins [[environ/environ.lein "0.2.1"]]
   :hooks [environ.leiningen.hooks]
