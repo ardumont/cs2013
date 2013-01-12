@@ -1,7 +1,6 @@
 (ns cs2013.web-test
-  (:use [midje.sweet :only [fact]])
-  (:require [clojure.test :refer :all]
-            [cs2013.web :refer :all]))
+  (:use [midje.sweet :only [fact]]
+        [cs2013.web]))
 
 (fact
  (deal-with-query "Quelle est ton adresse email") => {:status 200
