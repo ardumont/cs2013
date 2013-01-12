@@ -1,6 +1,5 @@
 (ns ^{:doc "The first problem received via post request + solutions"}
-    cs2013.enonce1
-  (:use [midje.sweet]))
+    cs2013.enonce1)
 
 ;; L'echoppe de monade sur Scalaskel.
 
@@ -37,12 +36,13 @@
 ;; L'ordre des valeurs dans le tableau json, ainsi que le formatage n'a pas d'importance a partir du moment ou c'est du json valide, il s'entends.
 ;; Bon courage !
 
-(def cur {:foo           1
-          :bar           7
-          :qix           11
-          :baz           21})
+(def ^{:doc "Scalaskel currency"}
+  cur {:foo           1
+       :bar           7
+       :qix           11
+       :baz           21})
 
-(defn decomp
+(defn decomposition
   "Compute the decomposition of foo/bar/qix/baz"
   [n]
   (into []
@@ -56,18 +56,3 @@
              :bar x
              :qix y
              :baz z}))))
-
-(fact "Trying out the first 10 numbers with decomp"
- (map decomp (range 0 10)) => '([{:foo 0, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 1, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 2, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 3, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 4, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 5, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 6, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 0, :bar 1, :qix 0, :baz 0}
-                                 {:foo 7, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 1, :bar 1, :qix 0, :baz 0}
-                                 {:foo 8, :bar 0, :qix 0, :baz 0}]
-                                [{:foo 2, :bar 1, :qix 0, :baz 0}
-                                 {:foo 9, :bar 0, :qix 0, :baz 0}]))

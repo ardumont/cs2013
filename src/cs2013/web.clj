@@ -96,9 +96,7 @@
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
-       {:status 200
-        :headers {"Content-Type" "application/json"}
-        :body (-> n read-string enonce1/decomp json/write-str)})
+        (-> n read-string enonce1/decomposition json/write-str r/json-body-response))
 
   ;; everything else
   (ANY "*" []
