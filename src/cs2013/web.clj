@@ -52,12 +52,20 @@
 
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
 
+(defn char2int
+  [c]
+  (- (int c) (int \0)))
+
 (defmethod deal-with-query :default
   [q]
-  (let [[^Integer a ^Integer b] (str/split q #" ")
-        x (read-string a)
-        y (read-string b)]
-    (-> (+ x y) str body-response)))
+  (let [m {\space +
+           \* *
+           \/ /
+           \- -}
+        [a op b] q
+        x (char2int a)
+        y (char2int b)]
+    (-> ((m op) x y) str body-response)))
 
 
 (defn- post-body-response
@@ -130,8 +138,6 @@
                      {:port port :join? false})))
 
 (comment ;; interactive dev
-  (if jetty-server
-    (do
-      (.stop jetty-server)
-      (def jetty-server (-main)))
+  (do
+    (.stop jetty-server)
     (def jetty-server (-main))))
