@@ -53,9 +53,11 @@
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
 
 (defn char2int
+  "Compute a char inside \"0123456789\" into its integer value"
   [c]
   (- (int c) (int \0)))
 
+;; deal with operation query
 (def deal-with-operation nil)
 (defmulti deal-with-operation (fn [q] (some #{\(} q)))
 
