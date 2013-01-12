@@ -50,7 +50,10 @@
 
 (defmethod deal-with-query :default
   [q]
-  (eval (read-string (str/join " "(cons \( (cons \+ (conj (into [] q) \))))))))
+  (let [[^Integer a ^Integer b] (str/split q #" ")
+        x (read-string a)
+        y (read-string b)]
+    (-> (+ x y) str body-response)))
 
 (defn- post-body-response
   "Answering request"
