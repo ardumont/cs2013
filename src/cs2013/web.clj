@@ -14,7 +14,8 @@
             [cs2013.enonce1 :as enonce1]
             [clojure.data.json :as json]
             [clojure.string :as str]
-            [cs2013.mail :as mail]))
+            [cs2013.mail :as mail]
+            [cs2013.response :as r]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -25,28 +26,21 @@
       (session/wrap-session)
       (basic/wrap-basic-authentication authenticated?)))
 
-(defn- body-response
-  "Answering request"
-  [message]
-  {:status 200
-   :headers {"Content-Type" "text/plain"}
-   :body message})
-
 (def deal-with-query nil);; small trick when using demulti
 (defmulti deal-with-query identity)
 
-(defmethod deal-with-query "Quelle est ton adresse email" [_] (body-response (mail/my)))
-(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (body-response "OUI"))
-(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
-(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
+(defmethod deal-with-query "Quelle est ton adresse email" [_] (r/body-response (mail/my)))
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_] (r/body-response "OUI"))
+(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_] (r/body-response "OUI"))
+(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (r/body-response "OUI"))
+(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (r/body-response "NON"))
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (r/body-response "OUI"))
 
 ;; not perfect because we lost the registered request as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
 
-(defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
+(defmethod deal-with-query "enonces" [_] (r/body-response (pr-str @bodies)))
 
 (defn char2int
   "Compute a char inside \"0123456789\" into its integer value"
@@ -90,14 +84,7 @@
 
 (defmethod deal-with-query :default
   [q]
-  (-> q deal-with-operation str body-response))
-
-(defn- post-body-response
-  "Answering request"
-  [m]
-  {:status 201
-   :headers {"Content-Type" "text/plain"}
-   :body m})
+  (-> q deal-with-operation str r/body-response))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
@@ -112,16 +99,21 @@
   ;; play with remote repl
   (ANY "/repl" {:as req}
        (drawbridge req))
-  ;; deal with naive questions
+
+  ;; deal with questions
   (GET "/" [q]
        (deal-with-query q))
+
+  ;; first problem
   (GET "/scalaskel/change/:n" [n]
        {:status 200
         :headers {"Content-Type" "application/json"}
         :body (-> n read-string enonce1/decomp json/write-str)})
+
   ;; reception of the problem
   (POST "/enonce/1" {:as req}
-        (-> req (deal-with-body :enonce-1) post-body-response))
+        (-> req (deal-with-body :enonce-1) r/post-body-response))
+
   ;; everything else
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
