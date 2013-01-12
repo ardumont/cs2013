@@ -40,5 +40,5 @@
 
   (query :get "/scalaskel/change/1" {:accept :json}))
 
-;; (h/load-hook #'wikeo-query #'query #'post-cnt)
+;; (h/load-hook #'some-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))
