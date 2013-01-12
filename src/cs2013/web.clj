@@ -52,7 +52,7 @@
   bodies (atom {}))
 
 ;; a route to expose the problems registered
-(defmethod deal-with-query "enonces" [_] (r/body-response (pr-str @bodies)))
+(defmethod deal-with-query "enonces" [_] (-> @bodies pr-str r/body-response))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; query operations
