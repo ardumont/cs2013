@@ -40,7 +40,9 @@
 
   (query :get "/scalaskel/change/1" {:accept :json})
   (query :get "?q=1+1")
-  (query :get "?q=2+2"))
+  (query :get "?q=2+2")
+  (query :get "?q=3+3")
+  )
 
 ;; (h/load-hook #'some-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))

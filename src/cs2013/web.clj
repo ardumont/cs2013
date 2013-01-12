@@ -12,7 +12,8 @@
             [environ.core :refer [env]]
             [clojure.tools.trace :only [trace] :as t]
             [cs2013.enonce1 :as enonce1]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [clojure.string :as str]))
 
 (defn- authenticated? [user pass]
   ;; TODO: heroku config:add REPL_USER=[...] REPL_PASSWORD=[...]
@@ -47,8 +48,9 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_] (body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
 
-(defmethod deal-with-query "1 1" [_] (body-response "2"))
-(defmethod deal-with-query "2 2" [_] (body-response "4"))
+(defmethod deal-with-query :default
+  [q]
+  (eval (read-string (str/join " "(cons \( (cons \+ (conj (into [] q) \))))))))
 
 (defn- post-body-response
   "Answering request"
