@@ -57,6 +57,7 @@
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_] (body-response "OUI"))
 (defmethod deal-with-query "enonces" [_] (body-response (pr-str @bodies)))
 (defmethod deal-with-query "1 1" [_] (body-response "2"))
+(defmethod deal-with-query "2 2" [_] (body-response "4"))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
