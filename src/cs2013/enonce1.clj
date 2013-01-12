@@ -1,4 +1,5 @@
-(ns cs2013.enonce1)
+(ns cs2013.enonce1
+  (:use [midje.sweet]))
 
 ;; L'echoppe de monade sur Scalaskel.
 
@@ -55,6 +56,17 @@
              :qix y
              :baz z}))))
 
-(comment
-  (map decomp (range 0 10))
-  (decomp 100))
+(fact "Trying out the first 10 numbers with decomp"
+ (map decomp (range 0 10)) => '([{:foo 0, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 1, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 2, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 3, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 4, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 5, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 6, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 0, :bar 1, :qix 0, :baz 0}
+                                 {:foo 7, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 1, :bar 1, :qix 0, :baz 0}
+                                 {:foo 8, :bar 0, :qix 0, :baz 0}]
+                                [{:foo 2, :bar 1, :qix 0, :baz 0}
+                                 {:foo 9, :bar 0, :qix 0, :baz 0}]))
