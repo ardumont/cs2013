@@ -2,11 +2,12 @@
   cs2013.operations)
 
 (defn char2int
-  "Compute a char inside \"0123456789\" into its integer value"
+  "Compute a char inside \"0123456789\" into its integer value (no checking the bad input)"
   [c]
   (- (int c) (int \0)))
 
-(def ^{:doc "Map of coding operations translations"}
+(def ^{:private true
+       :doc "Map of coding operations translations"}
   operators {\space +
              \* *
              \- -
