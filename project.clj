@@ -1,8 +1,8 @@
 (defproject cs2013 "1.0.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://cs2013.herokuapp.com"
-  :license {:name "FIXME: choose"
-            :url "http://example.com/FIXME"}
+  :description "Code story 2013 - web server to expose answers to questions."
+  :url "http://serene-spire-2229.herokuapp.com/"
+  :license {:name "Eclipse licence"
+            :url "https://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure       "1.4.0"]
                  [compojure                 "1.1.3"]
                  [ring/ring-jetty-adapter   "1.1.6"]
