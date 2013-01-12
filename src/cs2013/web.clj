@@ -40,6 +40,7 @@
    :headers {"Content-Type" "text/plain"}
    :body m})
 
+;; not perfect because we lost the registered request as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {}))
 
