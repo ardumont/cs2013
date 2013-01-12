@@ -1,4 +1,5 @@
-(ns cs2013.mail)
+(ns ^{:doc "Just a namespace relative to my email, first query solution for inscription"}
+  cs2013.mail)
 
 (defn my
   "My email"

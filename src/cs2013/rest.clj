@@ -1,23 +1,25 @@
-(ns cs2013.rest
+(ns ^{:doc "rest client for the application"}
+  cs2013.rest
   (:require [clj-http.client   :as c]
             [clojure.string    :as s]))
 
 (def urls
-  {:local "http://localhost:5000/"                    ;; foreman start
+  {:local "http://localhost:5000/"                     ;; foreman start
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
 (defn url
+  "The main url setup, switch between :remote and :local accordingly"
   [] (:local urls))
 
 (defn query
-  "Query the hdt utility."
+  "Query the server."
   [method path & [opts]] (c/request
                           (merge {:method     method
                                   :url        (format "%s%s" (url) path)
                                   :accept     (if (:accept opts) (:accept opts) :plain)}
                                  opts)))
 
-(comment
+(comment ;; to check manually that all is good
   (url)
   (query :get "?q=enonces")
   (query :get "?q=Quelle+est+ton+adresse+email")
@@ -41,8 +43,4 @@
   (query :get "/scalaskel/change/1" {:accept :json})
   (query :get "?q=1+1")
   (query :get "?q=2*2")
-  (query :get "?q=(1+9)*9")
-  )
-
-;; (h/load-hook #'some-query #'query #'post-cnt)
-;; (comment (h/unload-hook #'post-cnt))
+  (query :get "?q=(1+9)*9"))

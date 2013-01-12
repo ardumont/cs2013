@@ -1,4 +1,5 @@
-(ns cs2013.enonce1
+(ns ^{:doc "The first problem received via post request + solutions"}
+    cs2013.enonce1
   (:use [midje.sweet]))
 
 ;; L'echoppe de monade sur Scalaskel.

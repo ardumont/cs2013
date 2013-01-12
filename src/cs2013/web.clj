@@ -1,4 +1,5 @@
-(ns cs2013.web
+(ns ^{:doc "Server web to expose the response to problems"}
+  cs2013.web
   (:require [compojure.core :refer [defroutes GET PUT POST DELETE ANY]]
             [compojure.handler :refer [site api]]
             [compojure.route :as route]
