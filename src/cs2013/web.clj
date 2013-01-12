@@ -28,10 +28,10 @@
 
 (defn- body-response
   "Answering request"
-  [m]
+  [message]
   {:status 200
    :headers {"Content-Type" "text/plain"}
-   :body m})
+   :body message})
 
 (defn- post-body-response
   "Answering request"
