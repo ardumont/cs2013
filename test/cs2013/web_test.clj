@@ -69,4 +69,4 @@
 (fact
  (deal-with-query "(1 2)/2") => {:status 200
                                  :headers {"Content-Type" "text/plain"}
-                                 :body "1.5"})
+                                 :body "1,5"})

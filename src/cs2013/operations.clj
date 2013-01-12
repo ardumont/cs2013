@@ -31,5 +31,5 @@
         res (-> ((operators op) x y)
                 ((operators op2) z))]
     (if (= op2 \/)
-      (int res)
+      (float res)
       res)))

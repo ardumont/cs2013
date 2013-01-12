@@ -10,7 +10,7 @@
 (fact "compute-operation - beware the current implementation are limited to such format (one digit only too) "
    (compute-operation "(1 2) 9") => 12
    (compute-operation "(1 2)*9") => 27
-   (compute-operation "(1 2)/2") => 1)
+   (compute-operation "(1 2)/2") => 1.5)
 
 (fact
  (map char2int "0123456789") => (range 0 10))
