@@ -56,17 +56,33 @@
   [c]
   (- (int c) (int \0)))
 
+(def deal-with-operation nil)
+(defmulti deal-with-operation (fn [q] (some #{\(} q)))
+
+(def ^{:doc "Map of coding operations translations"}
+  operators {\space +
+             \* *})
+
+(defmethod deal-with-operation nil
+  [q]
+  (let [[a op b] q
+        x (char2int a)
+        y (char2int b)
+        res ((operators op) x y)]
+    (-> res str body-response)))
+
+(defmethod deal-with-operation \(
+  [q]
+  (let [[_ a op b _ op2 c] q
+        x (char2int a)
+        y (char2int b)
+        z (char2int c)
+        res (-> ((operators op) x y) ((operators op2) z))]
+    (-> res str body-response)))
+
 (defmethod deal-with-query :default
   [q]
-  (let [m {\space +
-           \* *
-           \/ /
-           \- -}
-        [a op b] q
-        x (char2int a)
-        y (char2int b)]
-    (-> ((m op) x y) str body-response)))
-
+  (deal-with-operation q))
 
 (defn- post-body-response
   "Answering request"
