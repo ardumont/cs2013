@@ -77,7 +77,7 @@
 
 (defmethod deal-with-operation nil
   [q]
-  (-> q compute-simple-operation str body-response))
+  (compute-simple-operation q))
 
 (defn compute-operation
   "Compute an operation of the (1*1)*10"
@@ -90,11 +90,11 @@
 
 (defmethod deal-with-operation \(
   [q]
-  (-> q compute-operation str body-response))
+  (compute-operation q))
 
 (defmethod deal-with-query :default
   [q]
-  (deal-with-operation q))
+  (-> q deal-with-operation float str body-response))
 
 (defn- post-body-response
   "Answering request"
