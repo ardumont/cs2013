@@ -7,14 +7,14 @@
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
 (defn url
-  [] (:remote urls))
+  [] (:local urls))
 
 (defn query
   "Query the hdt utility."
   [method path & [opts]] (c/request
                           (merge {:method     method
                                   :url        (format "%s%s" (url) path)
-                                  :accept     :plain}
+                                  :accept     (if (:accept opts) (:accept opts) :plain)}
                                  opts)))
 
 (comment
@@ -36,7 +36,9 @@
                             :encoding nil})
 
   (query :post "/enonce/1" {:body "some-data-octet-stream"
-                            :headers {"Content-Type" "application/octet-stream"}}))
+                            :headers {"Content-Type" "application/octet-stream"}})
+
+  (query :get "/scalaskel/change/1" {:accept :json}))
 
 ;; (h/load-hook #'wikeo-query #'query #'post-cnt)
 ;; (comment (h/unload-hook #'post-cnt))
