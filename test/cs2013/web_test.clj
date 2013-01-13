@@ -24,11 +24,11 @@
                                                                      :body "OUI"}
 
  ;; this method does not support between one digit, one operator, one digit
- (deal-with-query "1 1") => {:status 200
+ (deal-with-query "1+1") => {:status 200
                              :headers {"Content-Type" "text/plain"}
                              :body "2"}
 
- (deal-with-query "9 9") => {:status 200
+ (deal-with-query "9+9") => {:status 200
                              :headers {"Content-Type" "text/plain"}
                              :body "18"}
 
@@ -56,17 +56,12 @@
                              :headers {"Content-Type" "text/plain"}
                              :body "4"})
 
-(fact ;; limit case
- (deal-with-query "9*10") => {:status 200
-                              :headers {"Content-Type" "text/plain"}
-                              :body "9"})
-
 (fact
  (deal-with-query "(1*2)*2") => {:status 200
                                  :headers {"Content-Type" "text/plain"}
                                  :body "4"})
 
 (fact
- (deal-with-query "(1 2)/2") => {:status 200
+ (deal-with-query "(1+2)/2") => {:status 200
                                  :headers {"Content-Type" "text/plain"}
                                  :body "1,5"})

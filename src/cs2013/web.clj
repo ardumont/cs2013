@@ -52,16 +52,14 @@
 ;; query operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; dispatch on the presence of the \(
-(defmulti deal-with-operation (fn [q] (some #{\(} q)))
-
-;; naive operations
-(defmethod deal-with-operation nil [q] (o/compute-simple-operation q))
-
-;; those with \( \)
-(defmethod deal-with-operation \(  [q] (-> q o/compute-operation))
-
-(defmethod deal-with-query :default [q] (-> q deal-with-operation str (str/replace \. \,) r/body-response))
+(defmethod deal-with-query :default
+  [q]
+  (-> q
+      (str/replace \space \+) ;; space is +
+      o/compute-operation
+      str
+      (str/replace \. \,)     ;; expected decimal separator is , and not .
+      r/body-response))
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
