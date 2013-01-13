@@ -1,6 +1,7 @@
 (ns ^{:doc "A namespace to deal with query operations"}
   cs2013.operations
-  (:require [clojure.tools.trace :only [trace] :as t]))
+  (:require [clojure.tools.trace :only [trace] :as t]
+            [incanter.core :only [$=] :as i]))
 
 (defn compute "Compute"
   [x & r]
@@ -68,3 +69,13 @@
   (-> s
       opstr-2-opdigit    ;; transforming digits char into digits
       rational-2-decimal)) ;; expected decimal and not rational, but integer for the rest
+
+;; other route using incanter
+
+(defn infix-eval
+  "Parse an infix operation string into result."
+  [s]
+  (-> (format "'(%s)" s)
+      (.replaceAll , "([*+-/])" " $1 ")
+      load-string
+      i/$=))

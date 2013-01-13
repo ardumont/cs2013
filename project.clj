@@ -13,6 +13,7 @@
                  [clj-http                  "0.6.3"]
                  [org.clojure/tools.trace   "0.7.3"]
                  [org.clojure/data.json     "0.2.0"]
+                 [incanter                  "1.4.1" :exclusions [org.mongodb/mongo-java-driver]]
                  [midje                     "1.4.0"]]
   :dev-dependencies [[lein-midje "2.0.4"]]
   :min-lein-version "2.0.0"
