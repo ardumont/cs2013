@@ -39,7 +39,4 @@
 (defn rational-2-decimal
   "Transform a rational into decimal"
   [n]
-  (if (and ((comp not integer?) n)
-           (rational? n))
-    (float n)
-    n))
+  (if (integer? n) n (float n)))
