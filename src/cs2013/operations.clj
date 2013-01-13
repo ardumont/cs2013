@@ -1,7 +1,6 @@
 (ns ^{:doc "A namespace to deal with query operations"}
   cs2013.operations
-  (:require [clojure.tools.trace :only [trace] :as t]
-            [incanter.core :only [$=] :as i]))
+  (:require [clojure.tools.trace :only [trace] :as t]))
 
 (defn compute "Compute"
   [x & r]
@@ -70,16 +69,6 @@
       opstr-2-opdigit    ;; transforming digits char into digits
       rational-2-decimal)) ;; expected decimal and not rational, but integer for the rest
 
-;; other route using incanter
-
-(defn infix-eval
-  "Parse an infix operation string into result."
-  [s]
-  (-> (format "'(%s)" s)
-      (.replaceAll , "([*+-/])" " $1 ")
-      load-string
-      i/$=))
-
 ;; other routes
 
 (def precedence '{* 0, / 0
@@ -126,7 +115,9 @@
   [ast]
   (clojure.walk/postwalk
    (fn [e]
-     (if (seq? e) (let [[a o b] e] ((ops o) a b))))
+     (if (seq? e)
+       (let [[a o b] e] ((ops o) a b))
+       e))
    ast))
 
 (defn evaluate [s]
