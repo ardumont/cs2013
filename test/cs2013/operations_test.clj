@@ -20,15 +20,13 @@
   (opstr-2-opdigit "(1+2+10)*30")                        => 390
   (opstr-2-opdigit "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5") => 825/2)
 
-(future-fact
- (compute-infix-operation-from-string "1+2*10")              => 30
- (compute-infix-operation-from-string "(1+2+10)")            => 13
- (compute-infix-operation-from-string "(1+2+10)*3")          => 39
- (compute-infix-operation-from-string "(1+2+10)*30")         => 390
- (compute-infix-operation-from-string "(3+3+4+18+27*3)/2*5") => 412.5)
-
-(future-fact
-  (compute-infix-operation-from-string "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5") => 412.5)
+(fact
+  (compute-infix-operation-from-string "1+2*10")              => 21
+  (compute-infix-operation-from-string "(1+2+10)")            => 13
+  (compute-infix-operation-from-string "(1+2+10)*3")          => 39
+  (compute-infix-operation-from-string "(1+2+10)*30")         => 390
+  (compute-infix-operation-from-string "(3+3+4+18+27*3)/2*5") => 272.5
+  (compute-infix-operation-from-string "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5") => 272.5)
 
 (fact
   (compute 2 + 5)                           => 7

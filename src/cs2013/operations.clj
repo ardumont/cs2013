@@ -123,3 +123,10 @@
 (defn evaluate [s]
   "Parse and evaluate an infix arithmetic expression"
   (-> s make-ast eval-ast))
+
+(defn compute-infix-operation-from-string
+  "Main entry point to compute an infix string operation"
+  [s]
+  (-> s
+      evaluate             ;; transforming digits char into digits
+      rational-2-decimal)) ;; expected decimal and not rational, but integer for the rest
