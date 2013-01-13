@@ -43,9 +43,9 @@
              :else                  (recur (cons c acc) (first r) (next r)))))))
 
 (defn compute-operation
-  "Compute the operations (possible improvement: separation between parsing and computing)"
-  [s]
-  (->> s
+  "Compute the operations (sequence of operators in chars"
+  [seq]
+  (->> seq
        (reduce
         (fn [acc c]
           (cond
@@ -57,10 +57,9 @@
            :else                 (let [p (first acc)]
                                    (if-let [op (operators p)]
                                      (let [a (second acc)
-                                           b (char2int c)
-                                           val (op a b)]
+                                           val (op a c)]
                                        (cons val (drop 2 acc)))
-                                     (cons (char2int c) acc)))))
+                                     (cons c acc)))))
         [])
        first))
 
