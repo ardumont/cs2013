@@ -2,10 +2,11 @@
   (:use [midje.sweet]
         [cs2013.rest :as rest]))
 
-(binding [rest/*url* (:local url)]
+(comment
   (do
+    (def jetty-server (-main))
     (.stop jetty-server)
-    (def jetty-server (-main)))
+    (.start jetty-server))
 
   (fact "get"
     (query :get "?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)") => (contains {:status 200 :body "OUI"})
@@ -37,4 +38,4 @@
     (query :get "?q=(2*2)+1")                  => (contains {:status 200 :body "5.0"})
     (query :get "?q=(1*3)/2")                  => (contains {:status 200 :body "1.5"})
     (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2") => (contains {:status 200 :body "1.5"}))
-)
+  )

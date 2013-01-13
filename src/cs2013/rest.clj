@@ -7,13 +7,13 @@
   {:local "http://localhost:5000/"                     ;; foreman start
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
-(def ^:dynamic *url* (:local urls))
+(def url (:local urls))
 
 (defn query
   "Query the server."
   [method path & [opts]] (c/request
                           (merge {:method     method
-                                  :url        (format "%s%s" *url* path)
+                                  :url        (format "%s%s" url path)
                                   :accept     (if (:accept opts) (:accept opts) :plain)}
                                  opts)))
 
