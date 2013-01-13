@@ -7,15 +7,13 @@
   {:local "http://localhost:5000/"                     ;; foreman start
    :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
 
-(defn url
-  "The main url setup, switch between :remote and :local accordingly"
-  [] (:remote urls))
+(def ^:dynamic *url* (:local urls))
 
 (defn query
   "Query the server."
   [method path & [opts]] (c/request
                           (merge {:method     method
-                                  :url        (format "%s%s" (url) path)
+                                  :url        (format "%s%s" *url* path)
                                   :accept     (if (:accept opts) (:accept opts) :plain)}
                                  opts)))
 
@@ -45,4 +43,5 @@
   (query :get "?q=2*2")
   (query :get "?q=(1+9)*9")
   (query :get "?q=(1+2)*2")
-  (query :get "?q=(1+2)/2"))
+  (query :get "?q=(1+2)/2")
+  (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2"))
