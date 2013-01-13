@@ -56,6 +56,7 @@
   [q]
   (-> q
       (str/replace \space \+) ;; space is +
+      o/opstr-2-opdigit
       o/compute-operation     ;; computing
       o/rational-2-decimal    ;; expected decimal and not rational
       str                     ;; we need a string
