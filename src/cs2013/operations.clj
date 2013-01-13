@@ -2,10 +2,6 @@
   cs2013.operations
   (:require [clojure.tools.trace :only [trace] :as t]))
 
-(defn compute "Compute"
-  [x & r]
-  (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
-
 (defn int2char
   "integer to character"
   [n]
@@ -79,3 +75,48 @@
       opstr-2-opdigit    ;; transforming digits char into digits
       compute-operation  ;; computing the infix operation
       rational-2-decimal)) ;; expected decimal and not rational
+
+;;;;;;;;;;;;;;;;;;;;;;;;;; other way
+
+(defn use-list
+  "Given a operation in string, replace parenthesis into list"
+  [l]
+  (first
+   (reduce
+    (fn [acc e]
+      (cond (#{\(} e) (cons [] acc)
+            (#{\)} e) (let [curr-list (first acc)
+                            full-acc (second acc)
+                            new-acc (drop 2 acc)]
+                        (cons (conj full-acc curr-list) new-acc))
+            :else (let [curr-list (conj (vec (first acc)) e)]
+                    (cons curr-list (rest acc)))))
+    []
+    l)))
+
+(defn compute "Compute"
+  [x & r]
+  (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
+
+(defn map-char-and-operator-to-real
+  "Replace all digits and operators by their numbers and operations equivalent"
+  [s]
+  (loop [acc [] c (first s) r (rest s)]
+    (if (nil? c)
+      acc
+      (cond (#{\* \+ \- \/} c) (recur (conj acc (operators c)) (first r) (next r))
+            :else              (let [num    (->> r (take-while (fn [e] (not (#{\* \+ \/ -} e)))) (cons c) to-int)
+                                     new-r  (drop-while (fn [e] (not (#{\* \+ \/ -} e)))  r)]
+                                 (recur (conj acc num) (first new-r) (rest new-r)))))))
+
+(defn reduce-lists
+  [l]
+  )
+
+;; (defn orchestrate
+;;   [s]
+;;   (-> s
+;;       use-list
+;;       glue
+
+;;       ))
