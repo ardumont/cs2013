@@ -2,6 +2,10 @@
   cs2013.operations
   (:require [clojure.tools.trace :only [trace] :as t]))
 
+(defn compute "Compute"
+  [x & r]
+  (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
+
 (defn int2char
   "integer to character"
   [n]

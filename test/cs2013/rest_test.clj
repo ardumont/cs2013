@@ -1,9 +1,8 @@
 (ns cs2013.rest-test
   (:use [midje.sweet]
-        [cs2013.rest]))
+        [cs2013.rest :as rest]))
 
-(comment ;; you must first launch the local server
-
+(binding [rest/*url* (:local url)]
   (do
     (.stop jetty-server)
     (def jetty-server (-main)))
@@ -20,12 +19,12 @@
                               :headers {"Content-Type" "application/x-www-form-url-encoded"}
                               :encoding "UTF-8"}) => (contains {:status 201 :body "some-data-with-x-www-form-url-encoded-and-encoding"})
 
-    (query :post "/enonce/1" {:body "some-data-and-encoding"
-                              :headers {"Content-Type" "application/x-www-form-url-encoded"}
-                              :encoding nil}) => (contains {:status 201 :body "some-data-and-encoding"})
+                              (query :post "/enonce/1" {:body "some-data-and-encoding"
+                                                        :headers {"Content-Type" "application/x-www-form-url-encoded"}
+                                                        :encoding nil}) => (contains {:status 201 :body "some-data-and-encoding"})
 
-    (query :post "/enonce/1" {:body "some-data-octet-stream"
-                              :headers {"Content-Type" "application/octet-stream"}})  => (contains {:status 201 :body "some-data-octet-stream"}))
+                                                        (query :post "/enonce/1" {:body "some-data-octet-stream"
+                                                                                  :headers {"Content-Type" "application/octet-stream"}})  => (contains {:status 201 :body "some-data-octet-stream"}))
 
   (fact "enonce"
     (query :get "/scalaskel/change/1" {:accept :json}) => (contains {:status 200 :body "[{\"foo\":1,\"bar\":0,\"qix\":0,\"baz\":0}]"}))
@@ -35,5 +34,7 @@
     (query :get "?q=2*2")  => (contains {:status 200 :body "4"}))
 
   (fact "operations"
-    (query :get "?q=(2*2)+1")  => (contains {:status 200 :body "5.0"})
-    (query :get "?q=(1*3)/2")  => (contains {:status 200 :body "1.5"})))
+    (query :get "?q=(2*2)+1")                  => (contains {:status 200 :body "5.0"})
+    (query :get "?q=(1*3)/2")                  => (contains {:status 200 :body "1.5"})
+    (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2") => (contains {:status 200 :body "1.5"}))
+)
