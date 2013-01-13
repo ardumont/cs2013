@@ -10,15 +10,19 @@
  (deal-with-query "Es tu abonne a la mailing list(OUI/NON)") => {:status 200
                                                                  :headers {"Content-Type" "text/plain"}
                                                                  :body "OUI"}
+
  (deal-with-query "Es tu heureux de participer(OUI/NON)") => {:status 200
                                                               :headers {"Content-Type" "text/plain"}
                                                               :body "OUI"}
+
  (deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)") => {:status 200
                                                                                                     :headers {"Content-Type" "text/plain"}
                                                                                                     :body "OUI"}
+
  (deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)") => {:status 200
                                                                      :headers {"Content-Type" "text/plain"}
                                                                      :body "NON"}
+
  (deal-with-query "As tu bien recu le premier enonce(OUI/NON)")  => {:status 200
                                                                      :headers {"Content-Type" "text/plain"}
                                                                      :body "OUI"}

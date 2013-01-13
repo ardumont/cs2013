@@ -13,6 +13,7 @@
   (to-int '(\2 \9 \8)) => 298)
 
 (fact
+  (opstr-2-opdigit "1-2")                                => -1
   (opstr-2-opdigit "1+2*10")                             => 30
   (opstr-2-opdigit "(1+2+10)")                           => 13
   (opstr-2-opdigit "(1+2+10)*3")                         => 39

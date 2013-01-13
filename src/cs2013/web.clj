@@ -103,6 +103,5 @@
                      {:port port :join? false})))
 
 (comment ;; interactive dev
-  (do
-    (.stop jetty-server)
-    (def jetty-server (-main))))
+  (def jetty-server (-main))
+  (.stop jetty-server)) ;; trying to stop the first time will crash

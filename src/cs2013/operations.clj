@@ -13,6 +13,8 @@
              \- -
              \/ /})
 
+(def keys-operators (-> operators keys set))
+
 (defn to-int
   [s]
   (->> s (clojure.string/join "") read-string))
@@ -24,8 +26,8 @@
     (if (nil? c)
       acc
       (cond (#{\* \+ \- \/} c) (recur (conj acc (operators c)) (first r) (next r))
-            :else              (let [num    (->> r (take-while (fn [e] (not (#{\* \+ \/ -} e)))) (cons c) to-int)
-                                     new-r  (drop-while (fn [e] (not (#{\* \+ \/ -} e)))  r)]
+            :else              (let [num    (->> r (take-while (fn [e] (not (keys-operators e)))) (cons c) to-int)
+                                     new-r  (drop-while (fn [e] (not (keys-operators e)))  r)]
                                  (recur (conj acc num) (first new-r) (rest new-r)))))))
 
 (defn int2char
