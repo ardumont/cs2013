@@ -28,9 +28,11 @@
   (reverse
    (loop [acc [] c (first s) r (rest s)]
      (if (nil? c)
-       (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
-             new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number))]
-         new-acc)
+       (if (= \) (first acc))
+         acc
+         (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
+               new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number))]
+           new-acc))
        (cond (#{\* \- \+ \/ \)} c) (if (= \) (first acc))
                                      ;; the first element of the accumulator is (, then we only cons the operator
                                      (recur (cons c acc) (first r) (next r))
