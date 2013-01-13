@@ -62,6 +62,11 @@
                                  :body "4"})
 
 (fact
+ (deal-with-query "(1+2+3+4+5+6+7+8+9+10)*2") => {:status 200
+                                                  :headers {"Content-Type" "text/plain"}
+                                                  :body "110"})
+
+(fact
  (deal-with-query "(1+2)/2") => {:status 200
                                  :headers {"Content-Type" "text/plain"}
                                  :body "1,5"})

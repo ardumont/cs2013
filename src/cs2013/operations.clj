@@ -2,6 +2,11 @@
   cs2013.operations
   (:require [clojure.tools.trace :only [trace] :as t]))
 
+(defn int2char
+  "integer to character"
+  [n]
+  (char (+ n (int \0))))
+
 (defn char2int
   "Compute a char inside \"0123456789\" into its integer value (no checking the bad input)"
   [c]
@@ -13,6 +18,27 @@
              \* *
              \- -
              \/ /})
+(defn to-int
+  [s]
+  (->> s (clojure.string/join "") read-string))
+
+(defn opstr-2-opdigit
+  "Filter out the digits into number"
+  [s]
+  (reverse
+   (loop [acc [] c (first s) r (rest s)]
+     (if (nil? c)
+       (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
+             new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number))]
+         new-acc)
+       (cond (#{\* \- \+ \/ \)} c) (if (= \) (first acc))
+                                     ;; the first element of the accumulator is (, then we only cons the operator
+                                     (recur (cons c acc) (first r) (next r))
+                                     ;; otherwise, some savant extracting to transform into numbers and keeping the operations
+                                     (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
+                                           new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number) (cons c))]
+                                       (recur new-acc (first r) (next r))))
+             :else                  (recur (cons c acc) (first r) (next r)))))))
 
 (defn compute-operation
   "Compute the operations (possible improvement: separation between parsing and computing)"
