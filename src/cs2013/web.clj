@@ -56,9 +56,9 @@
   [q]
   (-> q
       (str/replace \space \+) ;; space is +
-      o/compute-operation
-      o/rational-2-decimal
-      str
+      o/compute-operation     ;; computing
+      o/rational-2-decimal    ;; expected decimal and not rational
+      str                     ;; we need a string
       (str/replace \. \,)     ;; expected decimal separator is , and not .
       r/body-response))
 
