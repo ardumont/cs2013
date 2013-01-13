@@ -79,3 +79,56 @@
       (.replaceAll , "([*+-/])" " $1 ")
       load-string
       i/$=))
+
+;; other routes
+
+(def precedence '{* 0, / 0
+                  + 1, - 1})
+
+(defn order-ops
+  "((A x B) y C) or (A x (B y C)) depending on precedence of x and y"
+  [[A x B y C & more]]
+  (let [ret (if (<=  (precedence x)
+                     (precedence y))
+              (list (list A x B) y C)
+              (list A x (list B y C)))]
+    (if more
+      (recur (concat ret more))
+      ret)))
+
+(defn add-parens
+  "Tree walk to add parens. All lists are length 3 afterwards."
+  [s]
+  (clojure.walk/postwalk
+   (fn [e] (if (seq? e)
+           (let [c (count e)]
+             (cond (even? c) (throw (Exception. "Must be an odd number of forms"))
+                   (= c 1) (first e)
+                   (= c 3) e
+                   (>= c 5) (order-ops e)))
+           e))
+   s))
+
+(defn make-ast
+  "Parse a string into a list of numbers, ops, and lists"
+  [s]
+  (-> (format "'(%s)" s)
+      (.replaceAll "([*+-/])" " $1 ")
+      load-string
+      add-parens))
+
+(def ops {'* *
+          '+ +
+          '- -
+          '/ /})
+
+(defn eval-ast
+  [ast]
+  (clojure.walk/postwalk
+   (fn [e]
+     (if (seq? e) (let [[a o b] e] ((ops o) a b))))
+   ast))
+
+(defn evaluate [s]
+  "Parse and evaluate an infix arithmetic expression"
+  (-> s make-ast eval-ast))
