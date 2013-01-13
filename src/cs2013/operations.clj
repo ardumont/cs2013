@@ -2,6 +2,32 @@
   cs2013.operations
   (:require [clojure.tools.trace :only [trace] :as t]))
 
+(defn compute "Compute"
+  [x & r]
+  (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
+
+(def ^{:doc "Map of coding operations translations"}
+  operators {\space +
+             \+ +
+             \* *
+             \- -
+             \/ /})
+
+(defn to-int
+  [s]
+  (->> s (clojure.string/join "") read-string))
+
+(defn map-char-and-operator-to-real
+  "Replace all digits and operators by their numbers and operations equivalent"
+  [s]
+  (loop [acc [] c (first s) r (rest s)]
+    (if (nil? c)
+      acc
+      (cond (#{\* \+ \- \/} c) (recur (conj acc (operators c)) (first r) (next r))
+            :else              (let [num    (->> r (take-while (fn [e] (not (#{\* \+ \/ -} e)))) (cons c) to-int)
+                                     new-r  (drop-while (fn [e] (not (#{\* \+ \/ -} e)))  r)]
+                                 (recur (conj acc num) (first new-r) (rest new-r)))))))
+
 (defn int2char
   "integer to character"
   [n]
@@ -12,35 +38,22 @@
   [c]
   (- (int c) (int \0)))
 
-(def ^{:doc "Map of coding operations translations"}
-  operators {\space +
-             \+ +
-             \* *
-             \- -
-             \/ /})
-(defn to-int
-  [s]
-  (->> s (clojure.string/join "") read-string))
+(defn compute-acc
+  [acc]
+  (->> acc reverse map-char-and-operator-to-real (apply compute)))
 
 (defn opstr-2-opdigit
   "Filter out the digits into number"
   [s]
-  (reverse
-   (loop [acc [] c (first s) r (rest s)]
-     (if (nil? c)
-       (if (= \) (first acc))
-         acc
-         (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
-               new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number))]
-           new-acc))
-       (cond (#{\* \- \+ \/ \)} c) (if (= \) (first acc))
-                                     ;; the first element of the accumulator is (, then we only cons the operator
-                                     (recur (cons c acc) (first r) (next r))
-                                     ;; otherwise, some savant extracting to transform into numbers and keeping the operations
-                                     (let [number  (->> acc (take-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) reverse to-int)
-                                           new-acc (->> acc (drop-while (fn [c] (not (#{\* \- \+ \/ \(} c)))) (cons number) (cons c))]
-                                       (recur new-acc (first r) (next r))))
-             :else                  (recur (cons c acc) (first r) (next r)))))))
+  (loop [acc [] c (first s) r (rest s)]
+    (if (nil? c)
+      (if (seq? acc)
+        (compute-acc acc)
+        acc)
+      (cond (#{\)} c)             (let [res     (->> acc (take-while (fn [e] (not (#{\(} e)))) compute-acc)
+                                        new-acc (->> acc (drop-while (fn [e] (not (#{\(} e)))) next)]
+                                    (recur (cons res new-acc) (first r) (next r)))
+            :else                  (recur (cons c acc) (first r) (next r))))))
 
 (defn compute-operation
   "Compute the operations (sequence of operators in chars"
@@ -93,30 +106,3 @@
                     (cons curr-list (rest acc)))))
     []
     l)))
-
-(defn compute "Compute"
-  [x & r]
-  (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
-
-(defn map-char-and-operator-to-real
-  "Replace all digits and operators by their numbers and operations equivalent"
-  [s]
-  (loop [acc [] c (first s) r (rest s)]
-    (if (nil? c)
-      acc
-      (cond (#{\* \+ \- \/} c) (recur (conj acc (operators c)) (first r) (next r))
-            :else              (let [num    (->> r (take-while (fn [e] (not (#{\* \+ \/ -} e)))) (cons c) to-int)
-                                     new-r  (drop-while (fn [e] (not (#{\* \+ \/ -} e)))  r)]
-                                 (recur (conj acc num) (first new-r) (rest new-r)))))))
-
-(defn reduce-lists
-  [l]
-  )
-
-;; (defn orchestrate
-;;   [s]
-;;   (-> s
-;;       use-list
-;;       glue
-
-;;       ))
