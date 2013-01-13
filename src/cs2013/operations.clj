@@ -67,3 +67,11 @@
   "Transform a rational into decimal"
   [n]
   (if (integer? n) n (float n)))
+
+(defn compute-infix-operation-from-string
+  "Main entry point to compute an infix string operation"
+  [s]
+  (-> s
+      opstr-2-opdigit    ;; transforming digits char into digits
+      compute-operation  ;; computing the infix operation
+      rational-2-decimal)) ;; expected decimal and not rational

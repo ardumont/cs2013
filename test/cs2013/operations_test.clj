@@ -28,5 +28,11 @@
   (opstr-2-opdigit "(1+2+10)*30") => '( \( 1 \+ 2 \+ 10 \) \* 30))
 
 (fact
+  (compute-infix-operation-from-string "1+2*10") => 30
+  (compute-infix-operation-from-string "(1+2+10)") => 13
+  (compute-infix-operation-from-string "(1+2+10)*3") => 39
+  (compute-infix-operation-from-string "(1+2+10)*30") => 390)
+
+(fact
  (rational-2-decimal 3/2) => 1.5
  (rational-2-decimal 3)   => 3)
