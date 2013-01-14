@@ -83,11 +83,11 @@
        (deal-with-query q))
 
   ;; reception of the problem
-  (POST "/enonce/1" {:as req}
-        (-> req (deal-with-body :enonce-1) r/post-body-response))
-
-  (POST "/enonce/2" {:as req}
-        (-> req (deal-with-body :enonce-2) r/post-body-response))
+  (POST "/enonce/:n" [n :as req]
+        (t/trace :n n)
+        (t/trace :req req)
+        (let [k (-> "enonce-" (str n) keyword)]
+          (-> req (deal-with-body k) r/post-body-response)))
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
