@@ -56,6 +56,7 @@
   [q]
   (-> q
       (str/replace \space \+) ;; space is +
+      (str/replace \, \.)     ;; , is .
       o/compute-infix-operation-from-string
       str                     ;; we need a string
       (str/replace \. \,)     ;; expected decimal separator is , and not .

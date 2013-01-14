@@ -78,6 +78,10 @@
 (fact
   (deal-with-query "1.5*4")               => {:status 200
                                               :headers {"Content-Type" "text/plain"}
+                                              :body "6,0"}
+
+  (deal-with-query "1,5*4")               => {:status 200
+                                              :headers {"Content-Type" "text/plain"}
                                               :body "6,0"})
 
 (fact
