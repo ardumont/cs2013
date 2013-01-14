@@ -131,7 +131,7 @@
   (clojure.walk/postwalk
    (fn [e]
      (if (seq? e)
-       (let [[a o b] e] ((ops o) a b))
+       (let [[a o b] e] ((ops o) (rationalize a) (rationalize b)))
        e))
    ast))
 
