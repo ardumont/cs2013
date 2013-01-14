@@ -37,5 +37,4 @@
   (fact "operations"
     (query :get "?q=(2*2)+1")                  => (contains {:status 200 :body "5.0"})
     (query :get "?q=(1*3)/2")                  => (contains {:status 200 :body "1.5"})
-    (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2") => (contains {:status 200 :body "1.5"}))
-  )
+    (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2") => (contains {:status 200 :body "1.5"})))
