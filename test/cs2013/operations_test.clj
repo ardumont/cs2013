@@ -22,8 +22,8 @@
 
 (fact
   (compute-infix-operation-from-string "1+2*10")              => 21
-  (compute-infix-operation-from-string "1.5*4")               => 6.0
-  (compute-infix-operation-from-string "1,5*4")               => 6.0
+  (compute-infix-operation-from-string "1.5*4")               => 6
+  (compute-infix-operation-from-string "1,5*4")               => 6
   (compute-infix-operation-from-string "(1+2+10)")            => 13
   (compute-infix-operation-from-string "(1+2+10)*3")          => 39
   (compute-infix-operation-from-string "(1+2+10)*30")         => 390
@@ -37,8 +37,10 @@
   (compute 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9) => 72)
 
 (fact
- (rational-2-decimal 3/2) => 1.5
- (rational-2-decimal 3)   => 3)
+ ;; (rational-2-decimal 3/2) => 1.5
+ ;; (rational-2-decimal 3)   => 3
+ ;; (rational-2-decimal 3/1) => 3
+ (rational-2-decimal 3.0) => 3)
 
 ;; (fact
 ;;   (map-char-and-operator-to-real [\1 \+ \2 \+ \3 \0]) => '(1 :+ 2 :+ 30)

@@ -66,7 +66,9 @@
 (defn rational-2-decimal
   "Transform a rational into decimal"
   [n]
-  (if (integer? n) n (float n)))
+  (cond (integer? n)  n
+        (zero? (- (int n) n)) (int n)
+        :else (float n)))
 
 (defn compute-infix-operation-from-string
   "Main entry point to compute an infix string operation"
