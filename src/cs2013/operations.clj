@@ -66,9 +66,13 @@
 (defn rational-2-decimal
   "Transform a rational into decimal"
   [n]
-  (cond (integer? n)  n
+  (cond (integer? n)    n
+        ;; hack, not found anything best at the moment
+        (< java.lang.Integer/MAX_VALUE n) n
+        ;; if same value as the rounding then rounding decimal to int
         (zero? (- (int n) n)) (int n)
-        :else (float n)))
+        ;; else it's a double (for rational number)
+        :else (double n)))
 
 (defn compute-infix-operation-from-string
   "Main entry point to compute an infix string operation"

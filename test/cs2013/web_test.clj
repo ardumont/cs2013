@@ -88,3 +88,9 @@
   (deal-with-query "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5") => {:status 200
                                                              :headers {"Content-Type" "text/plain"}
                                                              :body "272,5"})
+
+(fact
+ (deal-with-query "((1,1+2)+3,14+4+(5+6+7)+(8+9+10)*4267387833344334647677634)/2*553344300034334349999000")
+ => {:status 200
+     :headers {"Content-Type" "text/plain"}
+     :body "3,18780189038289E49"})
