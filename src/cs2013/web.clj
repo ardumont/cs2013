@@ -52,6 +52,7 @@
 ;; query operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; this function's job is to make the resource input compliant with the namespace operations and the result compliant with the client's expected format
 (defmethod deal-with-query :default
   [q]
   (-> q
