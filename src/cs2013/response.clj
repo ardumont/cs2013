@@ -22,3 +22,8 @@
   "Answer a request with json mime type and the message m"
   [m]
   (with-status-content-type-message 200 "application/json" m))
+
+(defn post-json-response
+  "Answer a request with json mime type and the message m"
+  [m]
+  (with-status-content-type-message 201 "application/json" m))

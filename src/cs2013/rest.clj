@@ -7,13 +7,14 @@
   {:local "http://localhost:5000"                     ;; foreman start
    :remote "http://serene-spire-2229.herokuapp.com"}) ;; git push heroku master
 
-(def url (:local urls))
+(defn url []
+  (:local urls))
 
 (defn query
   "Query the server."
   [method path & [opts]] (c/request
                           (merge {:method     method
-                                  :url        (format "%s%s" url path)
+                                  :url        (format "%s%s" (url) path)
                                   :accept     (if (:accept opts) (:accept opts) :plain)}
                                  opts)))
 
@@ -52,3 +53,22 @@
   (query :get "?q=(1+2)*2")
   (query :get "?q=(1+2)/2")
   (query :get "?q=(1+2+3+4+5+6+7+8+9+10)*2"))
+
+(defn post-query-json
+  "Query the server for posting a json body"
+  [path body & [opts]]
+  (c/request
+   (merge {:method       :post
+           :url          (format "%s%s" (url) path)
+           :body         (c/json-encode body)
+           :content-type :json
+           :accept       :json
+           :as           :json}
+          opts)))
+
+(comment
+  (post-query-json "/jajascript/optimize"
+                   [{:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+                    {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+                    {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                    {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]))

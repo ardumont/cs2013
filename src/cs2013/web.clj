@@ -13,11 +13,12 @@
             [clojure.data.json                 :as json]
             [clojure.string                    :as str]
             [cs2013
-             [enonce1                          :as e1]
              [mail                             :as mail]
              [response                         :as r]
              [operations                       :as o]
-             [middleware                       :as m]]))
+             [middleware                       :as m]
+             [enonce1                          :as e1]
+             [enonce2                          :as e2]]))
 
 ;; small trick when using demulti (not for prod)
 (if (-> env :production not)
@@ -64,13 +65,23 @@
       str                                   ;; we need a string
       (str/replace \. \,)))                 ;; expected decimal separator is , and not .
 
+(defn- read-body
+  "Just reading the body"
+  [body encoding]
+  (slurp body :encoding encoding))
+
 (defn- deal-with-body
-  "One function to deal with body/original-body (trace, register in atom, anything)"
+  "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [body character-encoding]} key]
-  (let [b (slurp body :encoding character-encoding)]
+  (let [b (read-body body character-encoding)]
     (t/trace "body: " b)
     (swap! bodies #(update-in % [key] (fn [_] b)))
     b))
+
+(defn- read-json-body
+  "One function to deal with body/original-body (trace, register in atom, etc...)"
+  [{:keys [body character-encoding]}]
+  (-> body (read-body character-encoding) json/read-str))
 
 ;; the main routing
 (defroutes app
@@ -91,6 +102,10 @@
   (GET "/scalaskel/change/:n" [n]
        (-> n read-string e1/decomposition json/write-str r/json-body-response))
 
+  ;; solution 2
+  (POST "/jajascript/optimize" {:as req}
+        (-> req read-json-body e2/optimize json/write-str r/post-json-response))
+
   ;; everything else
   (ANY "*" []
        (-> "404.html" io/resource slurp route/not-found)))
@@ -108,5 +123,5 @@
                      {:port port :join? false})))
 
 (comment ;; interactive dev
-  (def jetty-server (-main))
-  (.stop jetty-server)) ;; trying to stop the first time will crash
+  (.stop jetty-server) ;; trying to stop the first time will crash
+  (def jetty-server (-main)))
