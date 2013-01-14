@@ -66,8 +66,8 @@
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
-  [{:keys [body encoding]} key]
-  (let [b (slurp body :encoding encoding)]
+  [{:keys [body character-encoding]} key]
+  (let [b (slurp body :encoding character-encoding)]
     (t/trace "body: " b)
     (swap! bodies #(update-in % [key] (fn [_] b)))
     b))
