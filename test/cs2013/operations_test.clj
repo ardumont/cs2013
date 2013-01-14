@@ -31,8 +31,7 @@
   (compute-infix-operation-from-string "(3+3+4+18+27*3)/2*5")                                                                    => 272.5
   (compute-infix-operation-from-string "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5")                                                     => 272.5
   (compute-infix-operation-from-string "((1,1+2)+3,14+4+(5+6+7)+(8+9+10)*4267387833344334647677634)/2*553344300034334349999000") => 31878018903828899277492024491376690701584023926880
-;;  (compute-infix-operation-from-string "(-1)+(1)")                                                                               => nil
-  )
+  (compute-infix-operation-from-string "(-1)+(1)")                                                                               => 0)
 
 (fact
   (compute 2 + 5)                           => 7
@@ -41,18 +40,10 @@
   (compute 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9) => 72)
 
 (fact
- ;; (rational-2-decimal 3/2) => 1.5
- ;; (rational-2-decimal 3)   => 3
- ;; (rational-2-decimal 3/1) => 3
+ (rational-2-decimal 3/2) => 1.5
+ (rational-2-decimal 3)   => 3
+ (rational-2-decimal 3/1) => 3
  (rational-2-decimal 3.0) => 3)
-
-;; (fact
-;;   (map-char-and-operator-to-real [\1 \+ \2 \+ \3 \0]) => '(1 :+ 2 :+ 30)
-;;   (provided
-;;     (operators \1) => nil
-;;     (operators \2) => nil
-;;     (operators \3) => nil
-;;     (operators \+) => :+))
 
 (fact
   (make-ast "1+2*10")                                                                                 => '(1 + (2 * 10))
@@ -62,9 +53,10 @@
   (make-ast "(1+2+10)")                                                                               => '((1 + 2) + 10)
   (make-ast "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5")                                                     => '(((((((1 + 2) + 3) + 4) + ((5 + 6) + 7)) + (((8 + 9) + 10) * 3)) / 2) * 5)
   (make-ast "((1,1+2)+3,14+4+(5+6+7)+(8+9+10)*4267387833344334647677634)/2*553344300034334349999000") => '(((((((1.1 + 2) + 3.14) + 4) + ((5 + 6) + 7)) + (((8 + 9) + 10) * 4267387833344334647677634N)) / 2) * 553344300034334349999000N)
-  (make-ast "(-1)+(1)") => '((-1) + (1)))
+  (make-ast "(-1)+(1)") => '(-1 + 1))
 
 (fact
+  (eval-ast '(-1 + 1))                                                                   => 0
   (eval-ast '(1 + (2 * 10)))                                                             => 21
   (eval-ast '(1.5 + (2 * 10)))                                                           => 43/2
   (eval-ast '((1 + 2) + 10))                                                             => 13

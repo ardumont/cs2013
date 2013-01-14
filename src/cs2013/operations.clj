@@ -116,6 +116,7 @@
   (-> (format "'(%s)" s)                ;; first wrap the call as a list
       (str/replace #"([*+-/])" " $1 ")  ;; make space between operators, needed for the add-parens call
       (.replaceAll " [\\.,] " ".")      ;; deal with decimal
+      (.replaceAll " - " "-")           ;; deal with decimal
       load-string                       ;; load just the form using clojure (no eval)
       add-parens))                      ;; add parenthesis by pair using order precedence
 
