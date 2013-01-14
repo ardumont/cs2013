@@ -4,8 +4,8 @@
             [clojure.string    :as s]))
 
 (def urls
-  {:local "http://localhost:5000/"                     ;; foreman start
-   :remote "http://serene-spire-2229.herokuapp.com/"}) ;; git push heroku master
+  {:local "http://localhost:5000"                     ;; foreman start
+   :remote "http://serene-spire-2229.herokuapp.com"}) ;; git push heroku master
 
 (def url (:local urls))
 
@@ -19,7 +19,6 @@
 
 (comment ;; to check manually that all is good
   (url)
-  (query :get "?q=enonces")
   (query :get "?q=Quelle+est+ton+adresse+email")
   (query :get "?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)")
   (query :get "?q=Es+tu+heureux+de+participer(OUI/NON)")
@@ -32,12 +31,18 @@
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}
                             :encoding "UTF-8"})
 
+  (query :post "/enonce/1" {:body "some-data-with-x-www-form-url-encoded-and-encoding"
+                            :headers {"Content-Type" "application/x-www-form-url-encoded"}
+                            :encoding "UTF-8"})
+
   (query :post "/enonce/1" {:body "some-data-and-encoding"
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}
                             :encoding nil})
 
-  (query :post "/enonce/1" {:body "some-data-octet-stream"
+  (query :post "/enonce/2" {:body "some-data-octet-stream"
                             :headers {"Content-Type" "application/octet-stream"}})
+
+  (query :get "?q=enonces")
 
   (query :get "/scalaskel/change/1" {:accept :json})
   (query :get "/scalaskel/change/14" {:accept :json})
