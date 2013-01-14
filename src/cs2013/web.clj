@@ -30,13 +30,13 @@
 
 (defmulti deal-with-query identity)
 
-(defmethod deal-with-query "Quelle est ton adresse email" [_]                                               (r/body-response (mail/my)))
-(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_]                                    (r/body-response "OUI"))
-(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_]                                       (r/body-response "OUI"))
-(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (r/body-response "OUI"))
-(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_]                                (r/body-response "NON"))
-(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_]                                 (r/body-response "OUI"))
-(defmethod deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)" [_] (r/body-response "QUELS_BUGS"))
+(defmethod deal-with-query "Quelle est ton adresse email" [_]                                                             (mail/my))
+(defmethod deal-with-query "Es tu abonne a la mailing list(OUI/NON)" [_]                                                  "OUI")
+(defmethod deal-with-query "Es tu heureux de participer(OUI/NON)" [_]                                                     "OUI")
+(defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_]               "OUI")
+(defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_]                                              "NON")
+(defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_]                                               "OUI")
+(defmethod deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)" [_] "QUELS_BUGS")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registering bodies problems inside atom
@@ -47,7 +47,7 @@
   bodies (atom {}))
 
 ;; a route to expose the problems registered
-(defmethod deal-with-query "enonces" [_] (-> @bodies pr-str r/body-response))
+(defmethod deal-with-query "enonces" [_] (-> @bodies pr-str))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; query operations
@@ -57,12 +57,11 @@
 (defmethod deal-with-query :default
   [q]
   (-> q
-      (str/replace \space \+) ;; space is +
-      (str/replace \, \.)     ;; , is .
+      (str/replace \space \+)               ;; space is +
+      (str/replace \, \.)                   ;; , is .
       o/compute-infix-operation-from-string
-      str                     ;; we need a string
-      (str/replace \. \,)     ;; expected decimal separator is , and not .
-      r/body-response))
+      str                                   ;; we need a string
+      (str/replace \. \,)))                 ;; expected decimal separator is , and not .
 
 (defn- deal-with-body
   "One function to deal with body/original-body (trace, register in atom, anything)"
@@ -80,7 +79,7 @@
 
   ;; deal with questions
   (GET "/" [q]
-       (deal-with-query q))
+       (-> q deal-with-query r/body-response))
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
