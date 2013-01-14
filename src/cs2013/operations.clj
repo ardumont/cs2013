@@ -102,18 +102,20 @@
 (defn make-ast
   "Parse a string into a list of numbers, ops, and lists"
   [s]
-  (-> (format "'(%s)" s)
+  (-> (format "'(%s)" s)                ;; first wrap the call as a list
       (str/replace #"([*+-/])" " $1 ")  ;; make space between operators, needed for the add-parens call
-      (.replaceAll " \\. " ".")         ;; deal with decimal
-      load-string
-      add-parens))
+      (.replaceAll " [\\.,] " ".")      ;; deal with decimal
+      load-string                       ;; load just the form using clojure (no eval)
+      add-parens))                      ;; add parenthesis by pair using order precedence
 
-(def ops {'* *
-          '+ +
-          '- -
-          '/ /})
+(def ^{:doc "operator transco"}
+  ops {'* *
+       '+ +
+       '- -
+       '/ /})
 
 (defn eval-ast
+  "Postfix Evaluation of an infix operation well parenthesized (A op B)"
   [ast]
   (clojure.walk/postwalk
    (fn [e]
