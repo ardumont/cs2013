@@ -37,6 +37,7 @@
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_]                                              "NON")
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_]                                               "OUI")
 (defmethod deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)" [_] "QUELS_BUGS")
+(defmethod deal-with-query "As tu bien recu le second enonce(OUI/NON)" [_]                                                "NON")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registering bodies problems inside atom
