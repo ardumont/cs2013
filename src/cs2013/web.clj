@@ -86,9 +86,12 @@
   (POST "/enonce/1" {:as req}
         (-> req (deal-with-body :enonce-1) r/post-body-response))
 
+  (POST "/enonce/2" {:as req}
+        (-> req (deal-with-body :enonce-2) r/post-body-response))
+
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
-        (-> n read-string e1/decomposition json/write-str r/json-body-response))
+       (-> n read-string e1/decomposition json/write-str r/json-body-response))
 
   ;; everything else
   (ANY "*" []
