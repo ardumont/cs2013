@@ -23,6 +23,7 @@
 (fact
   (compute-infix-operation-from-string "1+2*10")              => 21
   (compute-infix-operation-from-string "1.5*4")               => 6.0
+  (compute-infix-operation-from-string "1,5*4")               => 6.0
   (compute-infix-operation-from-string "(1+2+10)")            => 13
   (compute-infix-operation-from-string "(1+2+10)*3")          => 39
   (compute-infix-operation-from-string "(1+2+10)*30")         => 390
@@ -46,3 +47,17 @@
 ;;     (operators \2) => nil
 ;;     (operators \3) => nil
 ;;     (operators \+) => :+))
+
+(fact
+  (make-ast "1+2*10")                             => '(1 + (2 * 10))
+  (make-ast "1.5+2*10")                           => '(1.5 + (2 * 10))
+  (make-ast "1,5+2*10")                           => '(1.5 + (2 * 10))
+  (make-ast "1+2+10")                             => '((1 + 2) + 10)
+  (make-ast "(1+2+10)")                           => '((1 + 2) + 10)
+  (make-ast "((1+2)+3+4+(5+6+7)+(8+9+10)*3)/2*5") => '(((((((1 + 2) + 3) + 4) + ((5 + 6) + 7)) + (((8 + 9) + 10) * 3)) / 2) * 5))
+
+(fact
+  (eval-ast '(1 + (2 * 10)))                                                             => 21
+  (eval-ast '(1.5 + (2 * 10)))                                                           => 21.5
+  (eval-ast '((1 + 2) + 10))                                                             => 13
+  (eval-ast '(((((((1 + 2) + 3) + 4) + ((5 + 6) + 7)) + (((8 + 9) + 10) * 3)) / 2) * 5)) => 545/2)
