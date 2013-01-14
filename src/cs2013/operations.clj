@@ -113,12 +113,12 @@
 (defn make-ast
   "Parse a string into a list of numbers, ops, and lists"
   [s]
-  (-> (format "'(%s)" s)                ;; first wrap the call as a list
-      (str/replace #"([*+-/])" " $1 ")  ;; make space between operators, needed for the add-parens call
-      (.replaceAll " [\\.,] " ".")      ;; deal with decimal
-      (.replaceAll " - " "-")           ;; deal with decimal
-      load-string                       ;; load just the form using clojure (no eval)
-      add-parens))                      ;; add parenthesis by pair using order precedence
+  (-> (format "'(%s)" s)                      ;; first wrap the call as a list
+      (str/replace #"([*+-/])" " $1 ")        ;; make space between operators, needed for the add-parens call
+      (.replaceAll " [\\.,] " ".")            ;; deal with decimal
+      (.replaceAll "([\\(*+-/]) [-] " "$1 -") ;; deal with negative
+      load-string                             ;; load just the form using clojure (no eval)
+      add-parens))                            ;; add parenthesis by pair using order precedence
 
 (def ^{:doc "operator transco"}
   ops {'* *
