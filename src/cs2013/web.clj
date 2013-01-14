@@ -36,6 +36,7 @@
 (defmethod deal-with-query "Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)" [_] (r/body-response "OUI"))
 (defmethod deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)" [_]                                (r/body-response "NON"))
 (defmethod deal-with-query "As tu bien recu le premier enonce(OUI/NON)" [_]                                 (r/body-response "OUI"))
+(defmethod deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)" [_] (r/body-response "QUELS_BUGS"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registering bodies problems inside atom
