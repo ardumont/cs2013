@@ -41,5 +41,5 @@
   "A middleware to fix the forgotten encoding, :character-encoding is not provided."
   (fn [req]
     (if (nil? (:character-encoding req))
-      (handler (assoc req :character-encoding "ISO-8859-1"))
+      (handler (assoc req :character-encoding "UTF-8"))
       (handler req))))

@@ -9,5 +9,5 @@
   ((wrap-correct-content-type identity) {:content-type "application/x-www-form-urlencoded"}) => {:content-type "application/json"})
 
 (fact "Testing specific code story middleware"
-  ((wrap-correct-encoding identity) {})                                => {:character-encoding "ISO-8859-1"}
+  ((wrap-correct-encoding identity) {})                                => {:character-encoding "UTF-8"}
   ((wrap-correct-encoding identity) {:character-encoding "something"}) => {:character-encoding "something"})
