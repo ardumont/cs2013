@@ -84,8 +84,6 @@
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
-        (t/trace :n n)
-        (t/trace :req req)
         (let [k (-> "enonce-" (str n) keyword)]
           (-> req (deal-with-body k) r/post-body-response)))
 
