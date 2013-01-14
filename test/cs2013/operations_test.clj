@@ -22,6 +22,7 @@
 
 (fact
   (compute-infix-operation-from-string "1+2*10")              => 21
+  (compute-infix-operation-from-string "1.5*4")               => 6.0
   (compute-infix-operation-from-string "(1+2+10)")            => 13
   (compute-infix-operation-from-string "(1+2+10)*3")          => 39
   (compute-infix-operation-from-string "(1+2+10)*30")         => 390

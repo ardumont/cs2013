@@ -1,6 +1,7 @@
 (ns ^{:doc "A namespace to deal with query operations"}
   cs2013.operations
-  (:require [clojure.tools.trace :only [trace] :as t]))
+  (:require [clojure.tools.trace :only [trace] :as t]
+            [clojure.string :as str]))
 
 (defn compute "Compute"
   [x & r]
@@ -102,7 +103,8 @@
   "Parse a string into a list of numbers, ops, and lists"
   [s]
   (-> (format "'(%s)" s)
-      (.replaceAll "([*+-/])" " $1 ")
+      (str/replace #"([*+-/])" " $1 ")  ;; make space between operators, needed for the add-parens call
+      (.replaceAll " \\. " ".")         ;; deal with decimal
       load-string
       add-parens))
 
