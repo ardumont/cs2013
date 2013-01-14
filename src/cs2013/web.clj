@@ -103,6 +103,7 @@
                          ((if (env :production) m/wrap-error-page trace/wrap-stacktrace))
                          (site {:session {:store store}})
                          m/wrap-request-logging
+                         m/wrap-correct-encoding
                          m/wrap-correct-content-type)
                      {:port port :join? false})))
 

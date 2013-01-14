@@ -36,3 +36,10 @@
     (if (= "application/x-www-form-urlencoded" (:content-type req))
       (handler (assoc req :content-type "application/json"))
       (handler req))))
+
+(defn wrap-correct-encoding [handler]
+  "A middleware to fix the forgotten encoding, :character-encoding is not provided."
+  (fn [req]
+    (if (nil? (:character-encoding req))
+      (handler (assoc req :character-encoding "ISO-8859-1"))
+      (handler req))))
