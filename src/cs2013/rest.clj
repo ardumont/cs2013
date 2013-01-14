@@ -26,6 +26,7 @@
   (query :get "?q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)")
   (query :get "?q=Est+ce+que+tu+reponds+toujours+oui(OUI/NON)")
   (query :get "?q=As+tu+bien+recu+le+premier+enonce(OUI/NON)")
+  (query :get "?q=As+tu+passe+une+bonne+nuit+malgre+les+bugs+de+l+etape+precedente(PAS_TOP/BOF/QUELS_BUGS)")
   ;; ...
   (query :post "/enonce/1" {:body "some-data-with-x-www-form-url-encoded-and-encoding"
                             :headers {"Content-Type" "application/x-www-form-url-encoded"}
@@ -39,6 +40,7 @@
                             :headers {"Content-Type" "application/octet-stream"}})
 
   (query :get "/scalaskel/change/1" {:accept :json})
+  (query :get "/scalaskel/change/14" {:accept :json})
   (query :get "?q=1+1")
   (query :get "?q=2*2")
   (query :get "?q=(1+9)*9")
