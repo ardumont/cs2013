@@ -65,23 +65,23 @@
       str                                   ;; we need a string
       (str/replace \. \,)))                 ;; expected decimal separator is , and not .
 
-(defn- read-body
+(defn- read-post-body
   "Just reading the body"
   [body encoding]
   (slurp body :encoding encoding))
 
-(defn- deal-with-body
+(defn- read-post-body-trace-and-register
   "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [body character-encoding]} key]
-  (let [b (read-body body character-encoding)]
+  (let [b (read-post-body body character-encoding)]
     (t/trace "body: " b)
     (swap! bodies #(update-in % [key] (fn [_] b)))
     b))
 
-(defn- read-json-body
+(defn- read-json-post-body
   "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [body character-encoding]}]
-  (-> body (read-body character-encoding) json/read-str))
+  (-> body (read-post-body character-encoding) json/read-str))
 
 ;; the main routing
 (defroutes app
@@ -95,8 +95,8 @@
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
-        (let [k (-> "enonce-" (str n) keyword)]
-          (-> req (deal-with-body k) r/post-body-response)))
+        (let [key-store (-> "enonce-" (str n) keyword)]
+          (-> req (read-post-body-trace-and-register key-store) r/post-body-response)))
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
@@ -104,7 +104,7 @@
 
   ;; solution 2
   (POST "/jajascript/optimize" {:as req}
-        (-> req read-json-body e2/optimize json/write-str r/post-json-response))
+        (-> req read-json-post-body e2/optimize json/write-str r/post-json-response))
 
   ;; everything else
   (ANY "*" []
