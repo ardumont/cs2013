@@ -89,8 +89,7 @@
 (defn order-ops
   "((A x B) y C) or (A x (B y C)) depending on precedence of x and y"
   [[A x B y C & more]]
-  (let [ret (if (<=  (precedence x)
-                     (precedence y))
+  (let [ret (if (<=  (precedence x) (precedence y))
               (list (list A x B) y C)
               (list A x (list B y C)))]
     (if more
@@ -103,7 +102,8 @@
   (clojure.walk/postwalk
    (fn [e] (if (seq? e)
            (let [c (count e)]
-             (cond (even? c) (throw (Exception. "Must be an odd number of forms"))
+             (cond (even? c)
+                     (throw (Exception. "Must be an odd number of forms"))
                    (= c 1) (first e)
                    (= c 3) e
                    (>= c 5) (order-ops e)))
