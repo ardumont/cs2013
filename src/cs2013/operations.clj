@@ -3,20 +3,24 @@
   (:require [clojure.tools.trace :only [trace] :as t]
             [clojure.string :as str]))
 
-(defn compute "Compute"
+(defn compute "Compute an infix operation (no parenthesis, no precedence, just a basic foldl computation)"
   [x & r]
   (reduce (fn [e [op l]] (op e l)) x (partition 2 r)))
 
-(def ^{:doc "Map of coding operations translations"}
+(def ^{:private true
+       :doc "Map of coding operations translations"}
   operators {\space +
              \+ +
              \* *
              \- -
              \/ /})
 
-(def keys-operators (-> operators keys set))
+(def ^{:private true
+       :doc "To not desynchronize from the operators's map"}
+  keys-operators (-> operators keys set))
 
 (defn to-int
+  ""
   [s]
   (->> s (clojure.string/join "") read-string))
 
@@ -41,7 +45,8 @@
   [c]
   (- (int c) (int \0)))
 
-(defn compute-acc
+(defn- compute-acc
+  "Factorized code to deal with the computed of the accumulator in a certain state"
   [acc]
   (->> acc reverse map-char-and-operator-to-real (apply compute)))
 
@@ -67,10 +72,10 @@
   "Main entry point to compute an infix string operation"
   [s]
   (-> s
-      opstr-2-opdigit    ;; transforming digits char into digits
+      opstr-2-opdigit      ;; transforming digits char into digits
       rational-2-decimal)) ;; expected decimal and not rational, but integer for the rest
 
-;; other routes
+;; other tryout - largely inspired from http://rosettacode.org/wiki/Arithmetic_evaluation#Clojure
 
 (def precedence '{* 0, / 0
                   + 1, - 1})
