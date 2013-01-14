@@ -45,14 +45,13 @@
 (defn decomposition
   "Compute the decomposition of foo/bar/qix/baz"
   [n]
-  (into []
-        (let [r (range 0 (inc n))]
-          (for [w r
-                x r
-                y r
-                z r
-                :when (= n (+ (* 1 w) (* 7 x) (* 11 y) (* 21 z)))]
-            {:foo w
-             :bar x
-             :qix y
-             :baz z}))))
+  (let [r (range 0 (inc n))]
+    (for [w r
+          x r
+          y r
+          z r
+          :when (= n (+ (* 1 w) (* 7 x) (* 11 y) (* 21 z)))]
+      {:foo w
+       :bar x
+       :qix y
+       :baz z})))
