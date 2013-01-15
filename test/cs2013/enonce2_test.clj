@@ -45,3 +45,19 @@
     ({:arr 14 :dep 5 :prix 7}
      ({:dep 14 :prix 7})
      ({:dep 14 :prix 8}))))
+
+(fact "Build a tree from a starting point."
+  (build-tree {:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+              [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+               {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
+               {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
+               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => '({:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10} (({:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8})
+                                                                                                                 ({:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}))))
+
+(future-fact "Building all the possible trees from the data problems"
+  (all-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+             {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
+             {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
+             {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [[{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                                                                 [[{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8} []] [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8} []]] ]
+                                                                [{:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}]])

@@ -76,6 +76,15 @@
   ([node & children] (cons node children))
   ([leaf] (cons leaf nil)))
 
+(defn build-tree
+  "Transform the vector of maps into a tree from a starting point m."
+  [{:keys [DEPART DUREE] :as map-start} all]
+  (let [new-depart (+ DEPART DUREE)]
+    (when-let [children (->> all (filter (comp #{new-depart} :DEPART)) (map #(build-tree % all)))]
+      (if (empty? children)
+        (mktree map-start)
+        (mktree map-start children)))))
+
 (defn optimize
   "Entry point for the second problem"
   [vm]
