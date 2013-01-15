@@ -13,6 +13,7 @@
             [clojure.data.json                 :as json]
             [clojure.string                    :as str]
             [cs2013
+             [input-utils                      :as utils]
              [mail                             :as mail]
              [response                         :as r]
              [operations                       :as o]
@@ -100,11 +101,20 @@
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
-       (-> n read-string e1/decomposition json/write-str r/json-body-response))
+       (-> n
+           read-string
+           e1/decomposition           ;; main algo for first problem
+           json/write-str
+           r/json-body-response))
 
   ;; solution 2
   (POST "/jajascript/optimize" {:as req}
-        (-> req read-json-post-body e2/optimize json/write-str r/post-json-response))
+        (-> req
+            read-json-post-body
+            utils/keyify
+            e2/optimize                ;; main algo for second problem
+            json/write-str
+            r/post-json-response))
 
   ;; everything else
   (ANY "*" []

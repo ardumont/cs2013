@@ -1,5 +1,6 @@
 (ns ^{:doc "The second problem received via post request + solutions"}
-  cs2013.enonce2)
+  cs2013.enonce2
+  (:require [clojure.tools.trace :only [trace] :as t]))
 
 ;; ## Location d'astronef sur Jajascript
 
@@ -58,5 +59,14 @@
 
 ;; Bons calculs !
 
-(defn optimize [_]
-  {:gain 18 :path ["MONAD42" "LEGACY01"]})
+;; Input from web.clj
+;; [{"DUREE" 5, "PRIX" 10, "VOL" "MONAD42", "DEPART" 0}
+;;  {"DUREE" 7, "PRIX" 14, "VOL" "META18", "DEPART" 3}
+;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
+;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
+
+(defn optimize
+  "Entry point for the second problem"
+  [input]
+    (t/trace input)
+    {:gain 18 :path ["MONAD42" "LEGACY01"]})
