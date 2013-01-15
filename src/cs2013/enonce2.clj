@@ -65,8 +65,25 @@
 ;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
+(defn sort-by-duration
+  "Sort a vector of maps with the key :DEPART"
+  [vmap-path]
+  (->> vmap-path set (sort-by :DEPART) vec))
+
+(defn find-all-path-from
+  "Find all the possible path from a :DEPART starting point"
+  [map-starting-point vmap-path]
+  (let [set-depart (-> vmap-path :DEPART set)]
+    (reduce
+     (fn [v {:keys [DEPART ARRIVEE]}]
+       (when (set-depart (+ DEPART ARRIVEE))
+         (conj v )
+         ))
+     []
+     vmap-path)))
+
 (defn optimize
   "Entry point for the second problem"
-  [input]
-    (t/trace input)
-    {:gain 18 :path ["MONAD42" "LEGACY01"]})
+  [vm]
+  (let [sm (sort-by-duration vm)]
+    {:gain 18 :path ["MONAD42" "LEGACY01"]}))
