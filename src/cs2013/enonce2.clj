@@ -85,6 +85,11 @@
         (mktree map-start)
         (mktree map-start children)))))
 
+(defn build-trees
+  "Compute all the trees from the problem at hand"
+  [all]
+  (map #(build-tree % all) all))
+
 (defn optimize
   "Entry point for the second problem"
   [vm]
