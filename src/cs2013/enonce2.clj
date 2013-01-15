@@ -1,3 +1,4 @@
+
 (ns ^{:doc "The second problem received via post request + solutions"}
   cs2013.enonce2
   (:require [clojure.tools.trace :only [trace] :as t]))
@@ -70,17 +71,10 @@
   [vmap-path]
   (->> vmap-path set (sort-by :DEPART) vec))
 
-(defn find-all-path-from
-  "Find all the possible path from a :DEPART starting point"
-  [map-starting-point vmap-path]
-  (let [set-depart (-> vmap-path :DEPART set)]
-    (reduce
-     (fn [v {:keys [DEPART ARRIVEE]}]
-       (when (set-depart (+ DEPART ARRIVEE))
-         (conj v )
-         ))
-     []
-     vmap-path)))
+(defn mktree
+  "Create a tree representing a journey"
+  ([node & children] (cons node children))
+  ([leaf] (cons leaf nil)))
 
 (defn optimize
   "Entry point for the second problem"
