@@ -115,33 +115,28 @@
                  {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
                  {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
+; --------------------------------------------------------------------------------
 
+(comment
+  (defn in->candidates
+    [in]
+    (->> in
+         (map (fn [c] {:path [c]
+                      :cmds (remove (partial = c) in)}))))
 
+  (defn candidate->children
+    [candidate]
+    (->> candidate
+         :cmds
+         (map (fn [cmd] {:path (conj (:path candidate) cmd)
+                        :cmds (remove #{cmd} (:cmds candidate))}))))
 
-;; --------------------------------------------------------------------------------
+  (defn candidates->candidates
+    [candidates]
+    (->> candidates
+         (mapcat candidate->children)))
 
-
-(defn in->candidates [in] (->> in
-                           (map (fn [c] {:path [c]
-                                               :cmds (remove (partial = c) in)}))
-
-
-                           ))
-
-
-(defn candidate->children [candidate]
-(->> candidate
-     :cmds
-     (map (fn [cmd] {:path (conj (:path candidate) cmd)
-                    :cmds (remove #{cmd} (:cmds candidate))}))))
-
-(defn candidates->candidates [candidates] (->> candidates
-                           (mapcat candidate->children)
-
-))
-
-
-(def all-mach
-  (->> in
-       in->candidates
-       (iterate candidates->candidates)))
+  (def all-mach
+    (->> in
+         in->candidates
+         (iterate candidates->candidates))))
