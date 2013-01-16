@@ -83,7 +83,7 @@
     (when-let [children (->> all (filter (comp #{new-depart} :DEPART)) (map #(build-tree % all)))]
       (if (empty? children)
         (mktree map-start)
-        (mktree map-start children)))))
+        (apply mktree map-start children)))))
 
 (defn build-trees
   "Compute all the trees from the problem at hand"

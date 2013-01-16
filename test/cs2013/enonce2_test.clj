@@ -45,20 +45,20 @@
               [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
                {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
                {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => '({:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10}
-                                                                   (({:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8})
-                                                                    ({:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}))))
+               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [{:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10}
+                                                                  [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
+                                                                  [{:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]])
 
 (fact "Building all the possible trees from the data problems"
-  (build-trees [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [[{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                                                    [[{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
-                                                                     [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]]]
-                                                                   [{:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}]
-                                                                   [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
-                                                                   [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]])
+             (build-trees [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                           {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
+                           {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
+                           {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [[{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                                                                               [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
+                                                                               [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]]
+                                                                              [{:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}]
+                                                                              [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
+                                                                              [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]])
 
 (fact "very basic"
   (find-all-path-from-tree nil) => [{:gain nil :path [nil]}])
