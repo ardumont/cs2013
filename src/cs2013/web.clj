@@ -92,7 +92,9 @@
 
   ;; deal with questions
   (GET "/" [q]
-       (-> q deal-with-query r/body-response))
+       (if q
+         (-> q deal-with-query r/body-response)
+         (r/body-response "This is a server for code story, nothing to see here.")))
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
