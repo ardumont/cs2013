@@ -1,12 +1,7 @@
 (ns cs2013.enonce2-test
   (:use [midje.sweet]
-        [cs2013.enonce2]))
-
-(fact "Dummy fact"
-      (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
-                 {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                 {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
-                 {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
+        [cs2013.enonce2]
+        [clojure.tools.trace :only [trace] :as t]))
 
 (fact "sorting"
       (sort-by-duration [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
@@ -17,42 +12,23 @@
                                                                             {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
                                                                             {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}])
 
-(future-fact "not yet"
-             (find-all-path-from {:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[0 5 9] [0 3 7]}
-
-             (find-all-path-from {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[3 7]}
-
-             (find-all-path-from {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[5 9]})
-
 (fact "Building a tree"
   (mktree {:dep 0 :arr 5 :prix 10}
           (mktree {:dep 5 :arr 14 :prix 7}
                   (mktree {:dep 14 :prix 7})
-                  (mktree {:dep 14 :prix 8}))) =>
-  '({:arr 5 :dep 0 :prix 10}
-    ({:arr 14 :dep 5 :prix 7}
-     ({:dep 14 :prix 7})
-     ({:dep 14 :prix 8}))))
+                  (mktree {:dep 14 :prix 8}))) => '({:arr 5 :dep 0 :prix 10}
+                                                    ({:arr 14 :dep 5 :prix 7}
+                                                     ({:dep 14 :prix 7})
+                                                     ({:dep 14 :prix 8}))))
 
 (fact "Build a tree from a starting point."
-  (build-tree {:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+  (build-tree {:DEPART 0 :VOL "MONAD42"   :DUREE 5 :PRIX 10}
               [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
                {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
                {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => '({:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10} (({:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8})
-                                                                                                                 ({:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}))))
+               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => '({:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10}
+                                                                   (({:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8})
+                                                                    ({:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}))))
 
 (fact "Building all the possible trees from the data problems"
   (build-trees [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
@@ -64,3 +40,49 @@
                                                                    [{:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}]
                                                                    [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
                                                                    [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]])
+
+;; {:gain (+ PRIX (:PRIX e))
+;;  :path (conj [VOL] (:VOL e))}
+
+(defn find-all-path-from-tree
+  "Compute all possible paths"
+  [[{:keys [PRIX VOL] :as node} & children]]
+  (t/trace :node node)
+  (t/trace :children children)
+  (if (-> children count pos?)
+    (map (fn [[c & cc :as child]]
+           (t/trace :c c)
+           (t/trace :cc cc)
+           (reduce
+            (fn [{:keys [gain path]} map-path] {:gain (+ gain (:gain map-path))
+                                               :path (concat path (:path map-path))})
+            {:gain PRIX
+             :path [VOL]}
+            (find-all-path-from-tree child)))
+         children)
+    [{:gain PRIX
+      :path [VOL]}]))
+
+(fact "very basic"
+  (find-all-path-from-tree nil) => [{:gain nil :path [nil]}])
+
+(fact "less basic"
+  (find-all-path-from-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}]) => [{:gain 10 :path ["MONAD42"]}])
+
+(fact "basic"
+  (find-all-path-from-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                            [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
+                            [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]]) => [{:gain 18 :path ["MONAD42" "LEGACY01"]}
+                                                                                {:gain 17 :path ["MONAD42" "YAGNI17"]}])
+(fact "with depth"
+  (find-all-path-from-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                             [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
+                              [{:DEPART 14 :VOL "META18" :DUREE 7 :PRIX 28}]]
+                             [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]]) => [{:gain 28 :path ["MONAD42" "LEGACY01" "META18"]}
+                                                                                 {:gain 17 :path ["MONAD42" "YAGNI17"]}])
+
+(fact "Dummy fact"
+      (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+                 {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                 {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+                 {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
