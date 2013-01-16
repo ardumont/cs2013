@@ -90,6 +90,11 @@
                {:gain 39 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
                {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]} :in-any-order))
 
+(fact "Given a list of paths, find the more interesting one (max of gain)"
+  (best-paths [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
+               {:gain 39 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
+               {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]}]) => [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}])
+
 (fact "Dummy fact"
       (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
                  {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}

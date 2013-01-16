@@ -102,6 +102,13 @@
      children)
     [{:gain PRIX :path [VOL]}]))
 
+(defn best-paths
+  "Compute the best paths from a list of path"
+  [gain-paths]
+  (let [possible-solutions (group-by :gain gain-paths)
+        best (->> possible-solutions keys (apply max))]
+    (possible-solutions best)))
+
 (defn optimize
   "Entry point for the second problem"
   [vm]
