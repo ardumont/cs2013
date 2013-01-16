@@ -69,7 +69,7 @@
 (defn sort-by-duration
   "Sort a vector of maps with the key :DEPART"
   [vmap-path]
-  (->> vmap-path set (sort-by :DEPART) vec))
+  (->> vmap-path (sort-by :DEPART) vec))
 
 (defn mktree
   "Create a tree representing a journey"
