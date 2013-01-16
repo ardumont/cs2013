@@ -1,7 +1,8 @@
 
 (ns ^{:doc "The second problem received via post request + solutions"}
   cs2013.enonce2
-  (:require [clojure.tools.trace :only [trace] :as t]))
+  (:require [clojure.tools.trace :only [trace] :as t]
+            [clojure.zip :as z]))
 
 ;; ## Location d'astronef sur Jajascript
 
