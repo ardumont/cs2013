@@ -93,5 +93,9 @@
 (defn optimize
   "Entry point for the second problem"
   [vm]
-  (let [sm (sort-by-duration vm)]
+  (let [sm (sort-by-duration vm)
+        trees (build-trees sm)]
+    (t/trace :vm vm)
+    (t/trace :sm sm)
+    (t/trace :trees trees)
     {:gain 18 :path ["MONAD42" "LEGACY01"]}))
