@@ -90,6 +90,18 @@
   [all]
   (map #(build-tree % all) all))
 
+(defn find-all-path-from-tree
+  "Compute all possible paths from a given tree"
+  [[{:keys [PRIX VOL] :as node} & children]]
+  (if (-> children count pos?)
+    (mapcat
+     (fn [[c & cc :as child]]
+       (map (fn [map-path]
+              {:gain (+ PRIX (:gain map-path)) :path (concat [VOL] (:path map-path))})
+            (find-all-path-from-tree child)))
+     children)
+    [{:gain PRIX :path [VOL]}]))
+
 (defn optimize
   "Entry point for the second problem"
   [vm]

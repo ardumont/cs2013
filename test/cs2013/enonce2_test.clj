@@ -60,25 +60,6 @@
                                                                    [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
                                                                    [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]])
 
-;; {:gain (+ PRIX (:PRIX e))
-;;  :path (conj [VOL] (:VOL e))}
-
-(defn find-all-path-from-tree
-  "Compute all possible paths"
-  [[{:keys [PRIX VOL] :as node} & children]]
-  (if (-> children count pos?)
-    (map (fn [[c & cc :as child]]
-           (reduce
-            (fn [{:keys [gain path]} map-path]
-              {:gain (+ gain (:gain map-path))
-               :path (concat path (:path map-path))})
-            {:gain PRIX
-             :path [VOL]}
-            (find-all-path-from-tree child)))
-         children)
-    [{:gain PRIX
-      :path [VOL]}]))
-
 (fact "very basic"
   (find-all-path-from-tree nil) => [{:gain nil :path [nil]}])
 
@@ -98,16 +79,16 @@
                                                                                  {:gain 17 :path ["MONAD42" "YAGNI17"]}])
 
 (fact "with-more-depth"
-      (find-all-path-from-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                 [{:DEPART 14 :VOL "META18" :DUREE 7 :PRIX 28}]
-                                 [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}
-                                  [{:DEPART 14 :VOL "ATM12" :DUREE 3 :PRIX 1}
-                                   [{:DEPART 17 :VOL "ATM121" :DUREE 4 :PRIX 20}]
-                                   [{:DEPART 17 :VOL "ATM122" :DUREE 3 :PRIX 21}]]]]])
-      => [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
-          {:gain 46 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
-          {:gain 47 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]}])
+  (find-all-path-from-tree [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
+                            [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
+                             [{:DEPART 14 :VOL "META18" :DUREE 7 :PRIX 28}]]
+                            [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}
+                             [{:DEPART 14 :VOL "ATM12" :DUREE 3 :PRIX 1}
+                              [{:DEPART 17 :VOL "ATM121" :DUREE 4 :PRIX 20}]
+                              [{:DEPART 17 :VOL "ATM122" :DUREE 3 :PRIX 21}]]]])
+  => (contains {:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
+               {:gain 39 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
+               {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]} :in-any-order))
 
 (fact "Dummy fact"
       (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
