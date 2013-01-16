@@ -1,4 +1,3 @@
-
 (ns ^{:doc "The second problem received via post request + solutions"}
   cs2013.enonce2
   (:require [clojure.tools.trace :only [trace] :as t]
