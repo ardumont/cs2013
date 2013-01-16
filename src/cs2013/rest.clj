@@ -8,7 +8,7 @@
    :remote "http://serene-spire-2229.herokuapp.com"}) ;; git push heroku master
 
 (defn url []
-  (:local urls))
+  (:remote urls))
 
 (defn query
   "Query the server."

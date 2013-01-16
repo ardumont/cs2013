@@ -12,25 +12,6 @@
                                                                             {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
                                                                             {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}])
 
-(future-fact "not yet"
-             (find-all-path-from {:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[0 5 9] [0 3 7]}
-
-             (find-all-path-from {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[3 7]}
-
-             (find-all-path-from {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                 [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                  {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                                  {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                                  {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => #{[5 9]})
-
 (fact "Building a tree"
   (mktree {:dep 0 :arr 5 :prix 10}
           (mktree {:dep 5 :arr 14 :prix 7}
@@ -94,12 +75,6 @@
   (best-paths [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
                {:gain 39 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
                {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]}]) => [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}])
-
-(future-fact "original dummy fact"
-      (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
-                 {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                 {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
-                 {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
 (fact "Now real"
       (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
