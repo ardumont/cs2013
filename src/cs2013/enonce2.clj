@@ -78,9 +78,11 @@
 
 (defn build-tree
   "Transform the vector of maps into a tree from a starting point m."
-  [{:keys [DEPART DUREE] :as map-start} all]
+  [{:keys [DEPART DUREE] :as map-start} all-nodes]
   (let [new-depart (+ DEPART DUREE)]
-    (when-let [children (->> all (filter (comp #{new-depart} :DEPART)) (map #(build-tree % all)))]
+    (when-let [children (->> all-nodes
+                             (filter (comp (partial <= new-depart) :DEPART))
+                             (map #(build-tree % all-nodes)))]
       (if (empty? children)
         (mktree map-start)
         (apply mktree map-start children)))))

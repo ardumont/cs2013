@@ -22,25 +22,45 @@
         ({:dep 14 :prix 7})
         ({:dep 14 :prix 8}))))
 
+(fact "Simple - Build a tree from a starting point."
+  (build-tree {:DEPART 0  :DUREE 5}
+              [{:DEPART 0 :DUREE 5}
+               {:DEPART 3 :DUREE 3}
+               {:DEPART 5 :DUREE 9}
+               {:DEPART 6 :DUREE 10}
+               {:DEPART 5 :DUREE 9}]) => '({:DEPART 0 :DUREE 5}
+                                           ({:DEPART 5 :DUREE 9})
+                                           ({:DEPART 6 :DUREE 10})
+                                           ({:DEPART 5 :DUREE 9})))
+
 (fact "Build a tree from a starting point."
-  (build-tree {:DEPART 0 :VOL "MONAD42"   :DUREE 5 :PRIX 10}
-              [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-               {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-               {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-               {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [{:DEPART 0 :VOL "MONAD42" :DUREE 5 :PRIX 10}
-                                                                  [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
-                                                                  [{:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]])
+  (build-tree {:DEPART 0  :DUREE 3}
+              [{:DEPART 0 :DUREE 3}
+               {:DEPART 3 :DUREE 3}
+               {:DEPART 3 :DUREE 1}
+               {:DEPART 5 :DUREE 9}
+               {:DEPART 6 :DUREE 10}
+               {:DEPART 5 :DUREE 9}]) => '({:DUREE 3 :DEPART 0}
+                                           ({:DUREE 3 :DEPART 3}
+                                            ({:DUREE 10 :DEPART 6}))
+                                           ({:DUREE 1 :DEPART 3}
+                                            ({:DUREE 9 :DEPART 5})
+                                            ({:DUREE 10 :DEPART 6})
+                                            ({:DUREE 9 :DEPART 5}))
+                                           ({:DUREE 9 :DEPART 5})
+                                           ({:DUREE 10 :DEPART 6})
+                                           ({:DUREE 9 :DEPART 5})))
 
 (fact "Building all the possible trees from the data problems"
-             (build-trees [{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                           {:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}
-                           {:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}
-                           {:DEPART 5 :VOL "YAGNI17"  :DUREE 9 :PRIX 7}]) => [[{:DEPART 0 :VOL "MONAD42"  :DUREE 5 :PRIX 10}
-                                                                               [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
-                                                                               [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]]
-                                                                              [{:DEPART 3 :VOL "META18"   :DUREE 7 :PRIX 14}]
-                                                                              [{:DEPART 5 :VOL "LEGACY01" :DUREE 9 :PRIX 8}]
-                                                                              [{:DEPART 5 :VOL "YAGNI17" :DUREE 9 :PRIX 7}]])
+             (build-trees [{:DEPART 0 :DUREE 5}
+                           {:DEPART 3 :DUREE 7}
+                           {:DEPART 5 :DUREE 9}
+                           {:DEPART 5 :DUREE 9}]) => [[{:DEPART 0 :DUREE 5}
+                                                       [{:DEPART 5 :DUREE 9}]
+                                                       [{:DEPART 5 :DUREE 9}]]
+                                                      [{:DEPART 3  :DUREE 7}]
+                                                      [{:DEPART 5 :DUREE 9}]
+                                                      [{:DEPART 5 :DUREE 9}]])
 
 (fact "very basic"
   (find-all-path-from-tree nil) => [{:gain nil :path [nil]}])
