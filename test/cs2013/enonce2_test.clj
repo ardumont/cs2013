@@ -98,10 +98,10 @@
                {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]}]) => [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}])
 
 (fact "Now real"
-      (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
-                 {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                 {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
-                 {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
+  (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+             {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+             {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+             {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
 (fact "Other test"
   (optimize '({:VOL "AF1" :DEPART 0 :DUREE 1 :PRIX 2}
