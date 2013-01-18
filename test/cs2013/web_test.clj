@@ -10,7 +10,8 @@
   (deal-with-query "Est ce que tu reponds toujours oui(OUI/NON)")                                              => "NON"
   (deal-with-query "As tu bien recu le premier enonce(OUI/NON)")                                               => "OUI"
   (deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)") => "QUELS_BUGS"
-  (deal-with-query "As tu bien recu le second enonce(OUI/NON)")                                                => "OUI")
+  (deal-with-query "As tu bien recu le second enonce(OUI/NON)")                                                => "OUI"
+  (deal-with-query "As tu copie le code de ndeloof(OUI/NON)")                                                  => "NON")
 
 (fact "simple"
    (deal-with-query "1+1")                                                                                     => "2"
