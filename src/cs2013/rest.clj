@@ -4,11 +4,12 @@
             [clojure.string    :as s]))
 
 (def urls
-  {:local "http://localhost:5000"                     ;; foreman start
+  {:denis "http://lit-taiga-5126.herokuapp.com"
+   :local "http://localhost:5000"                     ;; foreman start
    :remote "http://serene-spire-2229.herokuapp.com"}) ;; git push heroku master
 
 (defn url []
-  (:remote urls))
+  (:denis urls))
 
 (defn query
   "Query the server."
@@ -22,7 +23,7 @@
   (url)
   (query :get "/")
 
-  (query :get "/?q=Quelle+est+ton+adresse+email")
+  (query :get "/?nnq=Quelle+est+ton+adresse+email")
   (query :get "/?q=Es+tu+abonne+a+la+mailing+list(OUI/NON)")
   (query :get "/?q=Es+tu+heureux+de+participer(OUI/NON)")
   (query :get "/?q=Es+tu+pret+a+recevoir+une+enonce+au+format+markdown+par+http+post(OUI/NON)")
@@ -73,4 +74,13 @@
                    [{:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
                     {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
                     {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                    {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]))
+                    {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}])
+
+  (post-query-json "/jajascript/optimize"
+                   '({:VOL "AF1" :DEPART 0 :DUREE 1 :PRIX 2}
+                     {:VOL "AF2" :DEPART 4 :DUREE 1 :PRIX 4}
+                     {:VOL "AF3" :DEPART 2 :DUREE 1 :PRIX 6}))
+
+  {:trace-redirects ["http://lit-taiga-5126.herokuapp.com/jajascript/optimize"], :request-time 347, :status 201, :headers {"content-length" "38", "date" "Fri, 18 Jan 2013 09:23:48 GMT", "cache-control" "no-store", "content-type" "application/json;charset=ISO-8859-1", "server" "Jetty(7.6.1.v20120215)", "connection" "keep-alive"}, :body {:gain 12, :path ["AF1" "AF3" "AF2"]}}
+
+  {:trace-redirects ["http://serene-spire-2229.herokuapp.com/jajascript/optimize"], :request-time 325, :status 201, :headers {"content-length" "38", "date" "Fri, 18 Jan 2013 09:24:32 GMT", "cache-control" "no-store", "content-type" "application/json;charset=ISO-8859-1", "server" "Jetty(7.6.1.v20120215)", "connection" "keep-alive"}, :body {:gain 12, :path ["AF1" "AF3" "AF2"]}})
