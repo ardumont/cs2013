@@ -1,7 +1,6 @@
 (ns ^{:doc "The second problem received via post request + solutions"}
   cs2013.enonce2
-  (:require [clojure.tools.trace :only [trace] :as t]
-            [clojure.zip :as z]))
+  (:require [clojure.tools.trace :only [trace] :as t]))
 
 ;; ## Location d'astronef sur Jajascript
 
@@ -76,16 +75,20 @@
   ([node & children] (cons node children))
   ([leaf] (cons leaf nil)))
 
+(defn children-sup
+  "Given a vector of children, return the data for which :DEPART is superior to n"
+  [n v]
+  (filter (comp (partial <= n) :DEPART) v))
+
 (defn build-tree
-  "Transform the vector of maps into a tree from a starting point m."
+  "Transform the sorted vector of maps into a tree from a starting point m."
   [{:keys [DEPART DUREE] :as map-start} all-nodes]
-  (let [new-depart (+ DEPART DUREE)]
-    (when-let [children (->> all-nodes
-                             (filter (comp (partial <= new-depart) :DEPART))
-                             (map #(build-tree % all-nodes)))]
-      (if (empty? children)
-        (mktree map-start)
-        (apply mktree map-start children)))))
+  (when-let [children (->> all-nodes
+                           (children-sup (+ DEPART DUREE))
+                           (map  #(build-tree % all-nodes)))]
+    (if (empty? children)
+      (mktree map-start)
+      (apply mktree map-start children))))
 
 (defn build-trees
   "Compute all the trees from the problem at hand"
