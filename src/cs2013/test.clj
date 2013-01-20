@@ -1,5 +1,6 @@
 (ns ^{:doc "A namespace for testing stuff"} cs2013.test
-  (:use [midje.sweet :only [fact future-fact truthy falsey]]))
+    (:use [midje.sweet :only [fact future-fact truthy falsey]])
+    (:require [cs2013.enonce2 :as e2]))
 
 ; --------------------------------------------------------------------------------
 
@@ -129,25 +130,12 @@
                                                                                                    {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
                                                                                             :cmds ({:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15})}))
 
-(defn sort-by-duration
-  "Sort a vector of maps with the key :DEPART"
-  [vmap-path]
-  (->> vmap-path (sort-by :DEPART) vec))
-
-(fact "sorting"
-  (sort-by-duration [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
-                     {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                     {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
-                     {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => [{:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
-                                                                        {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
-                                                                        {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                                                                        {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}])
 
 (defn all-valid-commands
   "Compute all possible matches."
   [in]
   (->> in
-       sort-by-duration
+       e2/sort-by-duration
        in->candidates
        (iterate candidates->candidates)
        (take-while (comp not empty?))
