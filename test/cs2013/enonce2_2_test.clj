@@ -137,3 +137,13 @@
   (compute-result {:path
                    [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
                     {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}]}) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
+
+(fact "Now real"
+  (optimize [{:DUREE 5 :PRIX 1 :VOL "F514" :DEPART 0}]) => {:gain 1 :path ["F514"]}
+  (optimize [{:VOL "AF1" :DEPART 0 :DUREE 1 :PRIX 2}
+             {:VOL "AF2" :DEPART 4 :DUREE 1 :PRIX 4}
+             {:VOL "AF3" :DEPART 2 :DUREE 1 :PRIX 6}]) => {:gain 12 :path ["AF1" "AF3" "AF2"]}
+  (optimize [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+             {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+             {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+             {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})

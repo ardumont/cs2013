@@ -47,14 +47,12 @@
   [cmd]
   (reduce
    (fn [{:keys [gain path] :as m} {:keys [PRIX VOL]}]
-     (-> m
-         (assoc-in [:gain] (+ gain PRIX))
-         (assoc-in [:path] (conj path VOL))))
-   {:gain 0
-    :path []}
+     {:gain (+ gain PRIX)
+      :path (conj path VOL)})
+   {:gain 0 :path []}
    (:path cmd)))
 
-(defn all-valid-commands
+(defn optimize
   "Compute all possible matches."
   [in]
   (->> in
@@ -63,6 +61,6 @@
        (iterate candidates->candidates)
        (take-while (comp not empty?))
        last
+       (map compute-result)
        e2/best-paths
-       first
-       compute-result))
+       first))
