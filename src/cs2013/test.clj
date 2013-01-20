@@ -50,12 +50,13 @@
                                                          {:path [{:VOL "META18"} {:VOL "YAGNI17"}]
                                                           :cmds ({:VOL "LEGACY01"} {:VOL "MONAD42"})}])
 
-(defn candidates->candidates
-  [candidates]
-  (->> candidates
-       (mapcat candidate->children)))
+(def ^{:doc "Compute all the candidates from the list of candidates"}
+  candidates->candidates (partial mapcat candidate->children))
 
-(def all-mach
+(defn all-match
+  "Compute all the possible matches"
+  [in]
   (->> in
        in->candidates
-       (iterate candidates->candidates)))
+       (iterate candidates->candidates)
+       (take-while (comp seq :cmds))))
