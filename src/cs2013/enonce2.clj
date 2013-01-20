@@ -85,7 +85,7 @@
   [{:keys [DEPART DUREE] :as map-start} all-nodes]
   (when-let [children (->> all-nodes
                            (children-sup (+ DEPART DUREE))
-                           (map  #(build-tree % all-nodes)))]
+                           (map #(build-tree % all-nodes)))]
     (if (empty? children)
       (mktree map-start)
       (apply mktree map-start children))))
