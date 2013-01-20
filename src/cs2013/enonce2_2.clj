@@ -8,8 +8,11 @@
 (defn in->candidates
   "Given a list of input commands, compute the map of :path/:cmds (first level)"
   [input]
-  (->> input
-       (map (fn [c] {:path [c] :cmds (remove #{c} input)}))))
+  (concat
+   (->> input
+        (map (fn [c] {:path [c] :cmds (remove #{c} input)})))
+   (->> input
+        (map (fn [c] {:path [c] :cmds ()})))))
 
 (defn valid?
   "Are all the commands valid?"
