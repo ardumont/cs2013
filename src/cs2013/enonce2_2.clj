@@ -1,7 +1,8 @@
 (ns ^{:doc "A namespace for testing stuff"}
   cs2013.enonce2-2
     (:use [midje.sweet :only [fact future-fact truthy falsey]])
-    (:require [cs2013.enonce2 :as e2]))
+    (:require [cs2013.enonce2 :as e2]
+              [clojure.tools.trace :only [trace] :as t]))
 
 ; --------------------------------------------------------------------------------
 
@@ -41,6 +42,18 @@
   (->> cands
        (mapcat candidate->commands)))
 
+(defn compute-result
+  "Given a command, compute the output"
+  [cmd]
+  (reduce
+   (fn [{:keys [gain path] :as m} {:keys [PRIX VOL]}]
+     (-> m
+         (assoc-in [:gain] (+ gain PRIX))
+         (assoc-in [:path] (conj path VOL))))
+   {:gain 0
+    :path []}
+   (:path cmd)))
+
 (defn all-valid-commands
   "Compute all possible matches."
   [in]
@@ -49,4 +62,7 @@
        in->candidates
        (iterate candidates->candidates)
        (take-while (comp not empty?))
-       last))
+       last
+       e2/best-paths
+       first
+       compute-result))

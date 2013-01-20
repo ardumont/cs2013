@@ -132,3 +132,8 @@
                                                                                                            {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
                                                                                                            {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
                                                                                                     :cmds '()} :in-any-order))
+
+(fact "compute the result from a possible command"
+  (compute-result {:path
+                   [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                    {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}]}) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
