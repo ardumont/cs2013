@@ -25,10 +25,15 @@
 (defn candidate->commands
   "Compute the list of children of one candidate"
   [{:keys [path gain cmds] :as cand}]
-  (->> cmds
-       (map (fn [c] {:path (conj path c)
-                    :cmds (remove #{c} cmds)}))
-       (filter (comp valid? :path))))
+  (filter
+   (comp valid? :path)
+   (concat
+    (->> cmds
+         (map (fn [c] {:path (conj path c)
+                      :cmds (remove #{c} cmds)})))
+    (->> cmds
+         (map (fn [c] {:path (conj path c)
+                      :cmds ()}))))))
 
 (defn candidates->candidates
   "Compute all the candidates from the list of candidates"

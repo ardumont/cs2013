@@ -51,35 +51,55 @@
   (candidate->commands {:path [{:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}]
                         :cmds [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
                                {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
-                               {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]}) => '({:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
-                                                                                            {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
-                                                                                     :cmds ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 3}
+                               {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]}) => (contains
+                                                                                   {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                                                                           {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
+                                                                                    :cmds '({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 3}
                                                                                             {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5})}
-                                                                                    {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
-                                                                                            {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5}]
-                                                                                     :cmds ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 3}
-                                                                                            {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5})}))
+                                                                                   {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                                                                           {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5}]
+                                                                                    :cmds '({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 3}
+                                                                                            {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5})}
+                                                                                   {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                                                                           {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
+                                                                                    :cmds '()}
+                                                                                   {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                                                                           {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5}]
+                                                                                    :cmds '()} :in-any-order))
 
 (fact "only one children command is valid from this input"
   (candidate->commands '{:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
                                 {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
                          :cmds  ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 15}
-                                 {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5})}) => '({:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                             {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                             {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
-                                                                                      :cmds ({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 5})}))
+                                 {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5})}) => (contains {:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                                                                                     {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}
+                                                                                                     {:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 15}]
+                                                                                              :cmds  ()}
+                                                                                             {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                     {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                     {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                              :cmds '({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 5})}
+                                                                                             :in-any-order))
 (fact "both children commands are valids from this input"
-   (candidate->commands '{:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
-                                 {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
-                          :cmds  ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 15}
-                                  {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17})}) => '({:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                               {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                               {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
-                                                                                        :cmds ({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 17})}
-                                                                                       {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                               {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                               {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
-                                                                                        :cmds ({:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15})}))
+  (candidate->commands '{:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
+                                {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
+                         :cmds  ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 15}
+                                 {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17})}) => (contains {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                      {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                      {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                               :cmds '({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 17})}
+                                                                                              {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                      {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                      {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
+                                                                                               :cmds '({:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15})}
+                                                                                              {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                      {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                      {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                               :cmds ()}
+                                                                                              {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                      {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                      {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
+                                                                                               :cmds ()} :in-any-order))
 (fact "Compute the children of one candidate"
   (candidates->candidates ['{:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
                                     {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
@@ -88,15 +108,27 @@
                            '{:path [{:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}
                                     {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5}]
                              :cmds  ({:DUREE 7 :PRIX 14 :VOL "META18" :DEPART 15}
-                                     {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17})}]) => '({:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                                   {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                                   {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
-                                                                                            :cmds ({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 5})}
-                                                                                           {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                                   {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                                   {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
-                                                                                            :cmds ({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 17})}
-                                                                                           {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
-                                                                                                   {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
-                                                                                                   {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
-                                                                                            :cmds ({:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15})}))
+                                     {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17})}]) => (contains {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                                    :cmds '({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 5})}
+                                                                                                   {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                                    :cmds '({:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 17})}
+                                                                                                   {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
+                                                                                                    :cmds '({:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15})}
+                                                                                                   {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                                    :cmds '()}
+                                                                                                   {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 7, :PRIX 14, :VOL "META18", :DEPART 15}]
+                                                                                                    :cmds '()}
+                                                                                                   {:path [{:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}
+                                                                                                           {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}
+                                                                                                           {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 17}]
+                                                                                                    :cmds '()} :in-any-order))
