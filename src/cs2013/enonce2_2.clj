@@ -4,37 +4,32 @@
     (:require [cs2013.enonce2 :as e2]
               [clojure.tools.trace :only [trace] :as t]))
 
-; --------------------------------------------------------------------------------
+(defn invalid?
+  "Is the new command cmd invalid regarding the reference command cmd (overlap between DEPART)"
+  [{:keys [DEPART DUREE]} cmd]
+  (< (:DEPART cmd) (+ DEPART DUREE)))
 
 (defn in->candidates
   "Given a list of input commands, compute the map of :path/:cmds (first level)"
   [input]
   (concat
    (->> input
-        (map (fn [c] {:path [c] :cmds (remove #{c} input)})))
+        (map (fn [{:keys [DEPART DUREE] :as c}]
+               {:path [c]
+                :cmds (remove #(invalid? c %) input)})))
    (->> input
         (map (fn [c] {:path [c] :cmds ()})))))
-
-(defn valid?
-  "Are all the commands valid?"
-  [cand]
-  (every? true?
-        (map (fn [{:keys [DEPART DUREE]} next-node] (<= (+ DEPART DUREE) (:DEPART next-node)))
-             cand
-             (rest cand))))
 
 (defn candidate->commands
   "Compute the list of children of one candidate"
   [{:keys [path gain cmds] :as cand}]
-  (filter
-   (comp valid? :path)
-   (concat
-    (->> cmds
-         (map (fn [c] {:path (conj path c)
-                      :cmds (remove #{c} cmds)})))
-    (->> cmds
-         (map (fn [c] {:path (conj path c)
-                      :cmds ()}))))))
+  (concat
+   (->> cmds
+        (map (fn [c] {:path (conj path c)
+                     :cmds (remove #(invalid? c %) cmds)})))
+   (->> cmds
+        (map (fn [c] {:path (conj path c)
+                     :cmds ()})))))
 
 (defn candidates->candidates
   "Compute all the candidates from the list of candidates"
