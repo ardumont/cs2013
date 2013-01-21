@@ -1,4 +1,4 @@
-(ns ^{:doc "A namespace for testing stuff"}
+(ns ^{:doc "Another approach for solving the second problem"}
   cs2013.enonce2-2
     (:use [midje.sweet :only [fact future-fact truthy falsey]])
     (:require [cs2013.enonce2 :as e2]
