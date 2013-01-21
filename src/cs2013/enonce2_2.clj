@@ -12,24 +12,22 @@
 (defn in->candidates
   "Given a list of input commands, compute the map of :path/:cmds (first level)"
   [input]
-  (concat
-   (->> input
-        (map (fn [{:keys [DEPART DUREE] :as c}]
-               {:path [c]
-                :cmds (remove #(invalid? c %) input)})))
-   (->> input
-        (map (fn [c] {:path [c] :cmds ()})))))
+
+  (->> input
+       (mapcat (fn [{:keys [DEPART DUREE] :as c}]
+                 [{:path [c]
+                   :cmds (remove #(invalid? c %) input)}
+                  {:path [c] :cmds ()}]))))
 
 (defn candidate->commands
   "Compute the list of children of one candidate"
   [{:keys [path gain cmds] :as cand}]
-  (concat
-   (->> cmds
-        (map (fn [c] {:path (conj path c)
-                     :cmds (remove #(invalid? c %) cmds)})))
-   (->> cmds
-        (map (fn [c] {:path (conj path c)
-                     :cmds ()})))))
+  (->> cmds
+       (mapcat (fn [c]
+                 [{:path (conj path c)
+                   :cmds (remove #(invalid? c %) cmds)}
+                  {:path (conj path c)
+                    :cmds ()}]))))
 
 (defn candidates->candidates
   "Compute all the candidates from the list of candidates"
