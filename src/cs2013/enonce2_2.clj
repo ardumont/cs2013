@@ -12,9 +12,8 @@
 (defn in->candidates
   "Given a list of input commands, compute the map of :path/:cmds (first level)"
   [input]
-
   (->> input
-       (mapcat (fn [{:keys [DEPART DUREE] :as c}]
+       (mapcat (fn [c]
                  [{:path [c]
                    :cmds (remove #(invalid? c %) input)}
                   {:path [c] :cmds ()}]))))
