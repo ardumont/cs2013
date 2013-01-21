@@ -23,10 +23,11 @@
   [{:keys [path gain cmds] :as cand}]
   (->> cmds
        (mapcat (fn [c]
-                 [{:path (conj path c)
-                   :cmds (remove #(invalid? c %) cmds)}
-                  {:path (conj path c)
-                    :cmds ()}]))))
+                 (let [npath (conj path c)]
+                   [{:path npath
+                     :cmds (remove #(invalid? c %) cmds)}
+                    {:path npath
+                     :cmds ()}])))))
 
 (defn candidates->candidates
   "Compute all the candidates from the list of candidates"
