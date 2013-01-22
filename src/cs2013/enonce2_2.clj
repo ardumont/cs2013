@@ -4,6 +4,11 @@
     (:require [cs2013.enonce2 :as e2]
               [clojure.tools.trace :only [trace] :as t]))
 
+(defn sort-by-duration
+  "Sort a vector of maps with the key :DEPART"
+  [vmap-path]
+  (->> vmap-path (sort-by :DEPART) vec))
+
 (defn invalid?
   "Is the new command cmd invalid regarding the reference command cmd (overlap between DEPART)"
   [{:keys [DEPART DUREE]} cmd]
@@ -49,7 +54,7 @@
   "Compute all possible matches."
   [in]
   (->> in
-       e2/sort-by-duration
+       sort-by-duration
        in->candidates
        (iterate candidates->candidates)
        (take-while (comp not empty?))

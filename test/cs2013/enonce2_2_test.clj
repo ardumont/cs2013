@@ -2,16 +2,14 @@
   (:use [midje.sweet]
         [cs2013.enonce2-2]))
 
-(comment
-  (def ^{:doc "input for tests"}
-    in [{:VOL "MONAD42"  :DEPART 0 :DUREE 3 :PRIX 10}
-        {:VOL "META18"   :DEPART 3 :DUREE 1 :PRIX 14}
-        {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}])
-
-  (def ^{:doc "Input for tests"}
-    candidate
-    '{:path [{:VOL "META18"}]
-      :cmds ({:VOL "LEGACY01"} {:VOL "MONAD42"} {:VOL "YAGNI17"})}))
+(fact "sorting"
+  (sort-by-duration [{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+                     {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                     {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+                     {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => [{:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+                                                                        {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}
+                                                                        {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                                                                        {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}])
 
 (fact "command invalid regarding the reference one"
   (invalid? {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14} {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}) => truthy)
