@@ -65,35 +65,29 @@
 ;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
-(defn sort-by-duration
-  "Sort a vector of maps with the key :DEPART"
-  [vmap-path]
-  (->> vmap-path (sort-by :DEPART) vec))
+(defn adjacent-list
+  "Compute the adjacent list"
+  [vm]
+  (reduce (fn [acc {:keys [DEPART DUREE] :as m}]
+            (let [adj (group-by (comp (partial <= (+ DEPART DUREE)) :DEPART) vm)]
+              (assoc acc m (adj true))))
+          {}
+          vm))
 
 (defn mktree
   "Create a tree representing a journey"
   ([node & children] (cons node children))
   ([leaf] (cons leaf nil)))
 
-(defn children-sup
-  "Given a vector of children, return the data for which :DEPART is superior to n"
-  [n v]
-  (filter (comp (partial <= n) :DEPART) v))
-
 (defn build-tree
-  "Transform the sorted vector of maps into a tree from a starting point m."
-  [{:keys [DEPART DUREE] :as map-start} all-nodes]
-  (when-let [children (->> all-nodes
-                           (children-sup (+ DEPART DUREE))
-                           (map #(build-tree % all-nodes)))]
+  "Transform the sorted vector of maps into a tree from a starting node map-start."
+  [adjacent-nodes {:keys [DEPART DUREE] :as map-start}]
+  (when-let [children (map
+                       (partial build-tree adjacent-nodes)
+                       (adjacent-nodes map-start))]
     (if (empty? children)
       (mktree map-start)
       (apply mktree map-start children))))
-
-(defn build-trees
-  "Compute all the trees from the problem at hand"
-  [all]
-  (map #(build-tree % all) all))
 
 (defn find-all-path-from-tree
   "Compute all possible paths from a given tree"
@@ -117,9 +111,9 @@
 (defn optimize
   "Entry point for the second problem"
   [vm]
-  (->> vm
-       sort-by-duration
-       build-trees
-       (mapcat find-all-path-from-tree)
-       best-paths
-       first))
+  (let [adj (adjacent-list vm)]
+    (->> vm
+         (map (partial build-tree adj))
+         (mapcat find-all-path-from-tree)
+         best-paths
+         first)))
