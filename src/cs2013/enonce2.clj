@@ -65,55 +65,64 @@
 ;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
-(defn adjacent-list
-  "Compute the adjacent list"
+(defn nodes
+  "Compute the nodes data (group by identity, the unique id VOL)"
   [vm]
-  (reduce (fn [acc {:keys [DEPART DUREE] :as m}]
+  (reduce
+   (fn [m {:keys [VOL] :as node}]
+     (assoc m VOL node))
+   {}
+   vm))
+
+(defn adjacent-nodes
+  "Compute the adjacent list (group by identity, the unique id VOL)n"
+  [vm]
+  (reduce (fn [acc {:keys [DEPART DUREE VOL] :as m}]
             (let [adj (group-by (comp (partial <= (+ DEPART DUREE)) :DEPART) vm)]
-              (assoc acc m (adj true))))
+              (assoc acc VOL (map :VOL (adj true)))))
           {}
           vm))
 
-(defn mktree
-  "Create a tree representing a journey"
-  ([node & children] (cons node children))
-  ([leaf] (cons leaf nil)))
-
 (defn build-tree
-  "Transform the sorted vector of maps into a tree from a starting node map-start."
-  [adjacent-nodes {:keys [DEPART DUREE] :as map-start}]
-  (when-let [children (map
-                       (partial build-tree adjacent-nodes)
-                       (adjacent-nodes map-start))]
-    (if (empty? children)
-      (mktree map-start)
-      (apply mktree map-start children))))
+  "breadth-first lazily building the tree"
+  [nds adj root-node]
+  ((fn next-elt [queue]
+     (lazy-seq
+      (when (seq queue)
+        (let [{:keys [id gain path] :as node} (peek queue)
+              children  (->> node
+                             :id
+                             adj
+                             (map (comp
+                                   (fn [{:keys [VOL PRIX]}]
+                                     {:id VOL
+                                      :gain (+ gain PRIX)
+                                      :path (conj path VOL)})
+                                   nds)))]
+          (cons node (->> children
+                          (into (pop queue))
+                          next-elt))))))
+   (conj clojure.lang.PersistentQueue/EMPTY root-node)))
 
-(defn find-all-path-from-tree
-  "Compute all possible paths from a given tree"
-  [[{:keys [PRIX VOL] :as node} & children]]
-  (if (-> children count pos?)
-    (mapcat
-     (fn [[c & cc :as child]]
-       (map (fn [map-path]
-              {:gain (+ PRIX (:gain map-path)) :path (concat [VOL] (:path map-path))})
-            (find-all-path-from-tree child)))
-     children)
-    [{:gain PRIX :path [VOL]}]))
+(defn build-tree-root
+  "Begin the building of the tree"
+  [nds adj {:keys [VOL PRIX]}]
+  (build-tree nds adj {:id VOL :gain PRIX :path [VOL]}))
 
-(defn best-paths
+(defn best-path
   "Compute the best paths from a list of path"
   [gain-paths]
   (let [possible-solutions (group-by :gain gain-paths)
-        best (->> possible-solutions keys (apply max))]
-    (possible-solutions best)))
+        best (->> possible-solutions keys (apply max))
+        fbest (-> best possible-solutions first)]
+    {:gain (:gain fbest)
+     :path (:path fbest)}))
 
 (defn optimize
   "Entry point for the second problem"
   [vm]
-  (let [adj (adjacent-list vm)]
+  (let [nds  (nodes vm)
+        adjs (adjacent-nodes vm)]
     (->> vm
-         (map (partial build-tree adj))
-         (mapcat find-all-path-from-tree)
-         best-paths
-         first)))
+         (mapcat (comp (partial build-tree-root nds adjs)))
+         best-path)))

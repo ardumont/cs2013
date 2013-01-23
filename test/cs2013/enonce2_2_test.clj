@@ -71,6 +71,11 @@
              {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
              {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
+(fact "Given a list of paths find the more interesting one (max of gain)"
+  (best-paths [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
+               {:gain 39 :path ["MONAD42" "YAGNI17" "ATM12" "ATM122"]}
+               {:gain 38 :path ["MONAD42" "YAGNI17" "ATM12" "ATM121"]}]) => [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}])
+
 (fact
   (optimize [{:VOL "resonant-unit-62"            :DEPART 0   :DUREE 4 :PRIX 15}
              {:VOL "sparkling-ragweed-28"        :DEPART 1   :DUREE 2 :PRIX 1}
