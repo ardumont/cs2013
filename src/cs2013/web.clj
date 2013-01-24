@@ -52,9 +52,6 @@
   bodies (atom {:enonce1 []
                 :enonce2 []}))
 
-;; a route to expose the problems registered
-(defmethod deal-with-query "enonces" [_] (-> @bodies pr-str))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; query operations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -103,6 +100,10 @@
              r/body-response)
          (r/body-response "This is a server for code story, nothing to see here.")))
 
+  (GET "/enonces/:n" [n :as req]
+       (let [key-store (-> "enonce-" (str n) keyword)]
+         (-> @bodies key-store pr-str r/body-response)))
+
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
         (let [key-store (-> "enonce-" (str n) keyword)]
@@ -112,7 +113,7 @@
   (GET "/scalaskel/change/:n" [n]
        (-> n
            read-string
-           e1/decomposition           ;; main algo for first problem
+           e1/decomposition ;; main algo for first problem
            json/write-str
            r/json-body-response))
 
@@ -122,7 +123,7 @@
             read-json-post-body
             utils/keyify
             t/trace
-            e2/optimize                ;; main algo for second problem
+            e2/optimize ;; main algo for second problem
             t/trace
             json/write-str
             r/post-json-response))
