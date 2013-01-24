@@ -69,7 +69,7 @@
 (defn- read-data
   "Just reading the body"
   [data encoding]
-  (slurp data :encoding encoding))
+  (slurp data :encoding (if encoding encoding "UTF-8")))
 
 (defn- read-trace-and-register-data
   "One function to deal with body/original-body (trace, register in atom, etc...)"
