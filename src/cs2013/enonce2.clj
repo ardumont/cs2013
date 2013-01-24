@@ -65,13 +65,19 @@
 ;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
-(defn nodes
+(defn nodes-and-adjacents
   "Compute the nodes data (group by identity, the unique id VOL)"
   [vm]
   (reduce
-   (fn [m {:keys [VOL] :as node}]
-     (assoc m VOL node))
-   {}
+   (fn [[nds adjs] {:keys [VOL DEPART DUREE] :as node}]
+     (let [potential-adjs (group-by
+                           (comp
+                            (partial <= (+ DEPART DUREE))
+                            :DEPART)
+                           vm)]
+       [(assoc nds  VOL node)
+        (assoc adjs VOL (map :VOL (potential-adjs true)))]))
+   [{} {}]
    vm))
 
 (defn adjacent-nodes
@@ -121,8 +127,7 @@
 (defn optimize
   "Entry point for the second problem"
   [vm]
-  (let [nds  (nodes vm)
-        adjs (adjacent-nodes vm)]
+  (let [[nds adjs] (nodes-and-adjacents vm)]
     (->> vm
          (mapcat (comp (partial build-tree-root nds adjs)))
          best-path)))
