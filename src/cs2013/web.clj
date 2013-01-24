@@ -95,7 +95,11 @@
   ;; deal with questions
   (GET "/" [q]
        (if q
-         (-> q deal-with-query r/body-response)
+         (-> q
+             t/trace
+             deal-with-query
+             t/trace
+             r/body-response)
          (r/body-response "This is a server for code story, nothing to see here.")))
 
   ;; reception of the problem
