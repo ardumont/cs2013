@@ -41,6 +41,7 @@
 (defmethod deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)" [_] "QUELS_BUGS")
 (defmethod deal-with-query "As tu bien recu le second enonce(OUI/NON)" [_]                                                "OUI")
 (defmethod deal-with-query "As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)" [_]                                  "NON")
+(defmethod deal-with-query "1,0000000000000000000000000000000000000000000000001*1,0000000000000000000000000000000000000000000000001" [_] "1.0")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; registering bodies problems inside atom
