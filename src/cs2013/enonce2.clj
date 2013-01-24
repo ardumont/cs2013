@@ -108,9 +108,7 @@
 (defn best-path
   "Compute the best paths from a list of path"
   [gain-paths]
-  (let [possible-solutions (group-by :gain gain-paths)
-        best (->> possible-solutions keys (apply max))
-        fbest (-> best possible-solutions first)]
+  (let [fbest (apply max-key :gain gain-paths)]
     {:gain (:gain fbest)
      :path (:path fbest)}))
 
