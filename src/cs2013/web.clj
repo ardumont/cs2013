@@ -49,7 +49,8 @@
 
 ;; not perfect because we lost the registered post requests as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
-  bodies (atom {}))
+  bodies (atom {:enonce1 []
+                :enonce2 []}))
 
 ;; a route to expose the problems registered
 (defmethod deal-with-query "enonces" [_] (-> @bodies pr-str))
@@ -77,8 +78,8 @@
   "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [body character-encoding]} key]
   (let [b (read-post-body body character-encoding)]
-    (t/trace "body: " b)
-    (swap! bodies #(update-in % [key] (fn [_] b)))
+    (t/trace :body  b)
+    (swap! bodies #(update-in % [key] conj b))
     b))
 
 (defn- read-json-post-body
