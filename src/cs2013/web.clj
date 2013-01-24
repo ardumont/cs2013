@@ -119,13 +119,11 @@
   (POST "/jajascript/optimize" {:as req}
         (-> req
             read-json-post-body
-            t/trace
             utils/keyify
             t/trace
             e2/optimize                ;; main algo for second problem
             t/trace
             json/write-str
-            t/trace
             r/post-json-response))
 
   ;; everything else
