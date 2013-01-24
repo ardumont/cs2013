@@ -81,14 +81,14 @@
 
 (defn build-tree
   "breadth-first lazily building the tree"
-  [nds adj root-node]
+  [nds adjs root-node]
   ((fn next-elt [queue]
      (lazy-seq
       (when (seq queue)
         (let [{:keys [id gain path] :as node} (peek queue)
               children  (->> node
                              :id
-                             adj
+                             adjs
                              (map (comp
                                    (fn [{:keys [VOL PRIX]}]
                                      {:id VOL
@@ -102,8 +102,8 @@
 
 (defn build-tree-root
   "Begin the building of the tree"
-  [nds adj {:keys [VOL PRIX]}]
-  (build-tree nds adj {:id VOL :gain PRIX :path [VOL]}))
+  [nds adjs {:keys [VOL PRIX]}]
+  (build-tree nds adjs {:id VOL :gain PRIX :path [VOL]}))
 
 (defn best-path
   "Compute the best paths from a list of path"
