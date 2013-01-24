@@ -50,7 +50,8 @@
 ;; not perfect because we lost the registered post requests as each deployment but better than nothing at the moment
 (def ^{:doc "post bodies registered"}
   bodies (atom {:enonce1 []
-                :enonce2 []}))
+                :enonce2 []
+                :enonce-jajascript []}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; query operations
@@ -75,7 +76,7 @@
   "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [data character-encoding]} key]
   (let [b (read-data data character-encoding)]
-    (t/trace :body  b)
+    (t/trace :body b)
     (swap! bodies #(update-in % [key] conj b))
     b))
 
@@ -102,12 +103,17 @@
 
   (GET "/enonces/:n" [n :as req]
     (let [key-store (-> "enonce-" (str n) keyword)]
-         (-> @bodies key-store pr-str r/body-response)))
+      (-> @bodies
+          key-store
+          pr-str
+          r/body-response)))
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
         (let [key-store (-> "enonce-" (str n) keyword)]
-          (-> req (read-trace-and-register-data key-store) r/post-body-response)))
+          (-> req
+              (read-trace-and-register-data key-store)
+              r/post-body-response)))
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
@@ -122,7 +128,6 @@
         (-> req
             read-json-post-body
             utils/keyify
-            (read-trace-and-register-data :enonce-jajascript)
             e2/optimize ;; main algo for second problem
             t/trace
             json/write-str
