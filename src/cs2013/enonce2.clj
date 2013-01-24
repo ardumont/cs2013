@@ -70,13 +70,12 @@
   [vm]
   (reduce
    (fn [[nds adjs] {:keys [VOL DEPART DUREE] :as node}]
-     (let [potential-adjs (group-by
-                           (comp
-                            (partial <= (+ DEPART DUREE))
-                            :DEPART)
-                           vm)]
+     (let [potential-adjs (filter (comp
+                                   (partial <= (+ DEPART DUREE))
+                                   :DEPART)
+                                  vm)]
        [(assoc nds  VOL node)
-        (assoc adjs VOL (map :VOL (potential-adjs true)))]))
+        (assoc adjs VOL (map :VOL potential-adjs))]))
    [{} {}]
    vm))
 
