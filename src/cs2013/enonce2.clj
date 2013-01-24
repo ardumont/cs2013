@@ -80,15 +80,6 @@
    [{} {}]
    vm))
 
-(defn adjacent-nodes
-  "Compute the adjacent list (group by identity, the unique id VOL)n"
-  [vm]
-  (reduce (fn [acc {:keys [DEPART DUREE VOL] :as m}]
-            (let [adj (group-by (comp (partial <= (+ DEPART DUREE)) :DEPART) vm)]
-              (assoc acc VOL (map :VOL (adj true)))))
-          {}
-          vm))
-
 (defn build-tree
   "breadth-first lazily building the tree"
   [nds adj root-node]
