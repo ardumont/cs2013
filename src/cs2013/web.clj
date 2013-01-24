@@ -66,15 +66,15 @@
       str                                   ;; we need a string
       (str/replace \. \,)))                 ;; expected decimal separator is , and not .
 
-(defn- read-post-body
+(defn- read-data
   "Just reading the body"
-  [body encoding]
-  (slurp body :encoding encoding))
+  [data encoding]
+  (slurp data :encoding encoding))
 
-(defn- read-post-body-trace-and-register
+(defn- read-trace-and-register-data
   "One function to deal with body/original-body (trace, register in atom, etc...)"
-  [{:keys [body character-encoding]} key]
-  (let [b (read-post-body body character-encoding)]
+  [{:keys [data character-encoding]} key]
+  (let [b (read-data data character-encoding)]
     (t/trace :body  b)
     (swap! bodies #(update-in % [key] conj b))
     b))
@@ -82,7 +82,7 @@
 (defn- read-json-post-body
   "One function to deal with body/original-body (trace, register in atom, etc...)"
   [{:keys [body character-encoding]}]
-  (-> body (read-post-body character-encoding) json/read-str))
+  (-> body (read-data character-encoding) json/read-str))
 
 ;; the main routing
 (defroutes app
@@ -101,13 +101,13 @@
          (r/body-response "This is a server for code story, nothing to see here.")))
 
   (GET "/enonces/:n" [n :as req]
-       (let [key-store (-> "enonce-" (str n) keyword)]
+    (let [key-store (-> "enonce-" (str n) keyword)]
          (-> @bodies key-store pr-str r/body-response)))
 
   ;; reception of the problem
   (POST "/enonce/:n" [n :as req]
         (let [key-store (-> "enonce-" (str n) keyword)]
-          (-> req (read-post-body-trace-and-register key-store) r/post-body-response)))
+          (-> req (read-trace-and-register-data key-store) r/post-body-response)))
 
   ;; first problem
   (GET "/scalaskel/change/:n" [n]
@@ -122,7 +122,7 @@
         (-> req
             read-json-post-body
             utils/keyify
-            t/trace
+            (read-trace-and-register-data :enonce-jajascript)
             e2/optimize ;; main algo for second problem
             t/trace
             json/write-str
