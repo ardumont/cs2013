@@ -2,45 +2,28 @@
   cs2013.enonce2-3
   (:require [clojure.tools.trace :only [trace] :as t]))
 
-(comment
-  (-> group-and-sort (subseq > 250) pprint))
-
-(defn build-tree
-  "breadth-first lazily building the tree"
-  [adjs root-node]
-  ((fn next-elt [queue]
-     (lazy-seq
-      (when (seq queue)
-        (let [{:keys [id gain path] :as node} (peek queue)
-              {:keys [DEPART DUREE]} (:cmd node)
-              children (for [[_ cmds] (subseq adjs > (+ DEPART DUREE))
-                             {:keys [VOL PRIX] :as cmd} cmds]
-                         {:cmd cmd
-                          :gain (+ gain PRIX)
-                          :path (conj path VOL)})]
-          (cons node (->> children
-                          (into (pop queue))
-                          next-elt))))))
-   (conj clojure.lang.PersistentQueue/EMPTY root-node)))
-
-(defn build-tree-root
-  "Begin the building of the tree"
-  [adjs {:keys [VOL PRIX] :as node}]
-  (build-tree adjs {:cmd node
-                    :gain PRIX
-                    :path [VOL]}))
-
-(defn best-path
-  "Compute the best paths from a list of path"
-  [gain-paths]
-  (let [fbest (apply max-key :gain gain-paths)]
-    {:gain (:gain fbest)
-     :path (:path fbest)}))
+(defn adjacents
+  "Compute the adjacent node starting at depart."
+  [depart mnodes]
+  (if-let [res (subseq mnodes >= depart)]
+    (-> res first val)))
 
 (defn optimize
-  "Compute the commands that optimize the gain."
+  "Compute the best command that optimizes the gain."
   [cmds]
-  (let [adjs-sorted-map (->> cmds (group-by #(+ (:DEPART %) (:DUREE %))) (into (sorted-map)))]
-    (->> cmds
-         (mapcat (partial build-tree-root adjs-sorted-map))
-         best-path)))
+  (->> cmds
+       (group-by (fn [{:keys [DEPART DUREE]}] (+ DEPART DUREE)))
+       (sort-by key)
+       (reduce
+        (fn [maxima [next-depart root-nodes]]
+          (let [max (maxima 0)]
+            (assoc maxima next-depart
+                   (apply max-key :gain
+                          max
+                          (for [{:keys [PRIX VOL DEPART]} root-nodes
+                                :let [{:keys [gain path]} (adjacents DEPART maxima)]]
+                            {:gain (+ gain PRIX)
+                             :path (conj path VOL)})))))
+        (sorted-map-by > 0 {:gain 0 :path []}))
+       first
+       val))
