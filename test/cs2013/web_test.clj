@@ -11,7 +11,8 @@
   (deal-with-query "As tu bien recu le premier enonce(OUI/NON)")                                               => "OUI"
   (deal-with-query "As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)") => "QUELS_BUGS"
   (deal-with-query "As tu bien recu le second enonce(OUI/NON)")                                                => "OUI"
-  (deal-with-query "As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)")                                  => "NON")
+  (deal-with-query "As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)")                                  => "NON"
+  (deal-with-query "Souhaites-tu-participer-a-la-suite-de-Code-Story(OUI/NON)")                                => "OUI")
 
 (fact "simple"
    (deal-with-query "1+1")                                                                                     => "2"
