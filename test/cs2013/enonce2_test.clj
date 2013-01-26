@@ -22,9 +22,9 @@
               {:id {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
                :gain 10
                :path ["MONAD42"]})
-  => '({:gain 10, :path ["MONAD42"], :id {:DUREE 5, :PRIX 10, :VOL "MONAD42", :DEPART 0}}
-       {:id {:DUREE 9, :PRIX 8, :VOL "LEGACY01", :DEPART 5}, :gain 18, :path ["MONAD42" "LEGACY01"]}
-       {:id {:DUREE 9, :PRIX 7, :VOL "YAGNI17", :DEPART 5}, :gain 17, :path ["MONAD42" "YAGNI17"]}))
+  => '({:gain 10 :path ["MONAD42"] :id {:DUREE 5 :PRIX 10 :VOL "MONAD42" :DEPART 0}}
+       {:id {:DUREE 9 :PRIX 8 :VOL "LEGACY01" :DEPART 5} :gain 18 :path ["MONAD42" "LEGACY01"]}
+       {:id {:DUREE 9 :PRIX 7 :VOL "YAGNI17" :DEPART 5} :gain 17 :path ["MONAD42" "YAGNI17"]}))
 
 (fact "Given a list of paths find the more interesting one (max of gain)"
   (best-path [{:gain 46 :path ["MONAD42" "LEGACY01" "META18"]}
@@ -46,11 +46,11 @@
              {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
 (fact
-  (optimize '({:VOL "anxious-roughneck-80", :DEPART 3, :DUREE 4, :PRIX 5}
-              {:VOL "puzzled-wharf-81", :DEPART 3, :DUREE 9, :PRIX 15}
-              {:VOL "quick-buddy-93", :DEPART 1, :DUREE 2, :PRIX 5}
-              {:VOL "poor-ukulele-38", :DEPART 3, :DUREE 6, :PRIX 12}
-              {:VOL "jealous-griddlecake-82", :DEPART 4, :DUREE 15, :PRIX 7})) => {:path ["quick-buddy-93" "puzzled-wharf-81"], :gain 20})
+  (optimize '({:VOL "anxious-roughneck-80" :DEPART 3 :DUREE 4 :PRIX 5}
+              {:VOL "puzzled-wharf-81" :DEPART 3 :DUREE 9 :PRIX 15}
+              {:VOL "quick-buddy-93" :DEPART 1 :DUREE 2 :PRIX 5}
+              {:VOL "poor-ukulele-38" :DEPART 3 :DUREE 6 :PRIX 12}
+              {:VOL "jealous-griddlecake-82" :DEPART 4 :DUREE 15 :PRIX 7})) => {:path ["quick-buddy-93" "puzzled-wharf-81"] :gain 20})
 
 (comment
   (doseq [i (range 100)]
@@ -81,7 +81,80 @@
                 {:VOL "hollow-photography-8"        :DEPART 24  :DUREE 5 :PRIX 12}]))))
 
 (comment
-  (future-fact (optimize [{:VOL "resonant-unit-62"            :DEPART 0   :DUREE 4 :PRIX 15}
+  (fact
+    (optimize '({:VOL "tame-outfielder-60"        :DEPART 2  :DUREE 7  :PRIX 24}
+                {:VOL "unsightly-cream-81"        :DEPART 4  :DUREE 7  :PRIX 16}
+                {:VOL "cloudy-infantryman-78"     :DEPART 0  :DUREE 9  :PRIX 10}
+                {:VOL "deafening-festival-23"     :DEPART 4  :DUREE 1  :PRIX 10}
+                {:VOL "witty-corkscrew-11"        :DEPART 0  :DUREE 18 :PRIX 2}
+                {:VOL "graceful-forearm-79"       :DEPART 9  :DUREE 6  :PRIX 18}
+                {:VOL "cheerful-menthol-58"       :DEPART 5  :DUREE 1  :PRIX 8}
+                {:VOL "cute-sprocket-90"          :DEPART 9  :DUREE 4  :PRIX 3}
+                {:VOL "weary-industry-57"         :DEPART 9  :DUREE 2  :PRIX 15}
+                {:VOL "old-fashioned-newlywed-79" :DEPART 6  :DUREE 19 :PRIX 6}
+                {:VOL "upset-carp-85"             :DEPART 11 :DUREE 10 :PRIX 27}
+                {:VOL "wide-snowman-57"           :DEPART 13 :DUREE 6  :PRIX 9}
+                {:VOL "helpless-soprano-96"       :DEPART 13 :DUREE 8  :PRIX 8}
+                {:VOL "ancient-puffin-64"         :DEPART 14 :DUREE 6  :PRIX 12}
+                {:VOL "hungry-castle-19"          :DEPART 11 :DUREE 1  :PRIX 3}
+                {:VOL "small-specialization-18"   :DEPART 16 :DUREE 6  :PRIX 18}
+                {:VOL "thoughtful-keyhole-17"     :DEPART 16 :DUREE 2  :PRIX 17}
+                {:VOL "testy-seat-36"             :DEPART 18 :DUREE 1  :PRIX 1}
+                {:VOL "wonderful-blimp-76"        :DEPART 17 :DUREE 9  :PRIX 11}
+                {:VOL "courageous-redwood-37"     :DEPART 16 :DUREE 11 :PRIX 5}
+                {:VOL "dull-flick-63"             :DEPART 23 :DUREE 7  :PRIX 7}
+                {:VOL "excited-raffle-94"         :DEPART 21 :DUREE 5  :PRIX 18}
+                {:VOL "tiny-sixshooter-30"        :DEPART 20 :DUREE 1  :PRIX 6}
+                {:VOL "joyous-radar-98"           :DEPART 24 :DUREE 4  :PRIX 12}
+                {:VOL "wild-slider-96"            :DEPART 20 :DUREE 12 :PRIX 3}
+                {:VOL "teeny-millipede-43"        :DEPART 28 :DUREE 8  :PRIX 19}
+                {:VOL "poised-babysitter-83"      :DEPART 27 :DUREE 9  :PRIX 13}
+                {:VOL "busy-wrench-13"            :DEPART 27 :DUREE 2  :PRIX 6}
+                {:VOL "famous-plantation-28"      :DEPART 26 :DUREE 5  :PRIX 12}
+                {:VOL "alive-boomerang-85"        :DEPART 27 :DUREE 8  :PRIX 3}
+                {:VOL "tough-multiplex-94"        :DEPART 31 :DUREE 8  :PRIX 20}
+                {:VOL "cooing-granola-52"         :DEPART 30 :DUREE 4  :PRIX 22}
+                {:VOL "hissing-underclassman-32"  :DEPART 33 :DUREE 2  :PRIX 7}
+                {:VOL "uptight-seat-18"           :DEPART 32 :DUREE 8  :PRIX 15}
+                {:VOL "arrogant-trout-54"         :DEPART 32 :DUREE 17 :PRIX 7}
+                {:VOL "curved-stomachache-14"     :DEPART 38 :DUREE 9  :PRIX 23}
+                {:VOL "delightful-shrimp-49"      :DEPART 37 :DUREE 6  :PRIX 17}
+                {:VOL "dull-monster-26"           :DEPART 37 :DUREE 4  :PRIX 5}
+                {:VOL "impossible-supervisor-37"  :DEPART 36 :DUREE 3  :PRIX 12}
+                {:VOL "ugliest-butler-86"         :DEPART 38 :DUREE 20 :PRIX 1}
+                {:VOL "good-emerald-42"           :DEPART 41 :DUREE 2  :PRIX 4}
+                {:VOL "bloody-fridge-53"          :DEPART 44 :DUREE 4  :PRIX 15}
+                {:VOL "long-verb-22"              :DEPART 44 :DUREE 9  :PRIX 6}
+                {:VOL "defeated-shopkeeper-62"    :DEPART 41 :DUREE 1  :PRIX 6}
+                {:VOL "dull-steam-48"             :DEPART 40 :DUREE 16 :PRIX 6}
+                {:VOL "hilarious-hijacker-50"     :DEPART 47 :DUREE 3  :PRIX 11}
+                {:VOL "fragile-lock-82"           :DEPART 48 :DUREE 2  :PRIX 4}
+                {:VOL "mammoth-abdominal-84"      :DEPART 48 :DUREE 5  :PRIX 9}
+                {:VOL "low-swordfish-76"          :DEPART 48 :DUREE 1  :PRIX 13}
+                {:VOL "deep-tangelo-94"           :DEPART 49 :DUREE 16 :PRIX 2}
+                {:VOL "lucky-sweatshop-68"        :DEPART 52 :DUREE 6  :PRIX 20}
+                {:VOL "alive-knee-47"             :DEPART 54 :DUREE 6  :PRIX 16}
+                {:VOL "busy-rejection-89"         :DEPART 53 :DUREE 6  :PRIX 3}
+                {:VOL "talented-driftwood-95"     :DEPART 54 :DUREE 2  :PRIX 8}
+                {:VOL "frightened-sucker-75"      :DEPART 54 :DUREE 6  :PRIX 1})) => {:gain 178
+                                                                                   :path ["tame-outfielder-60"
+                                                                                          "weary-industry-57"
+                                                                                          "hungry-castle-19"
+                                                                                          "thoughtful-keyhole-17"
+                                                                                          "testy-seat-36"
+                                                                                          "tiny-sixshooter-30"
+                                                                                          "excited-raffle-94"
+                                                                                          "busy-wrench-13"
+                                                                                          "cooing-granola-52"
+                                                                                          "impossible-supervisor-37"
+                                                                                          "defeated-shopkeeper-62"
+                                                                                          "bloody-fridge-53"
+                                                                                          "low-swordfish-76"
+                                                                                          "lucky-sweatshop-68"]}))
+
+(comment
+  (future-fact
+   (optimize [{:VOL "resonant-unit-62"            :DEPART 0   :DUREE 4 :PRIX 15}
                           {:VOL "sparkling-ragweed-28"        :DEPART 1   :DUREE 2 :PRIX 1}
                           {:VOL "nice-videodisc-57"           :DEPART 2   :DUREE 6 :PRIX 1}
                           {:VOL "fancy-tambourine-7"          :DEPART 4   :DUREE 5 :PRIX 14}
