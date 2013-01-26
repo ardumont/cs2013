@@ -19,7 +19,7 @@
              [operations                       :as o]
              [middleware                       :as m]
              [enonce1                          :as e1]
-             [enonce2                          :as e2]]))
+             [enonce2-3                        :as e2]]))
 
 ;; small trick when using demulti (not for prod)
 (if (-> env :production not)
