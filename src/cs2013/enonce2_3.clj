@@ -16,7 +16,7 @@
        (sort-by key)
        (reduce
         (fn [maxima [next-depart root-nodes]]
-          (let [max (maxima 0)]
+          (let [max (-> maxima first val)]
             (assoc maxima next-depart
                    (apply max-key :gain
                           max

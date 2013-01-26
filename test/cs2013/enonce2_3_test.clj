@@ -32,7 +32,7 @@
              {:VOL "AF2" :DEPART 4 :DUREE 1 :PRIX 4}
              {:VOL "AF3" :DEPART 2 :DUREE 1 :PRIX 6}]) => {:gain 12 :path ["AF1" "AF3" "AF2"]})
 
-(future-fact
+(fact
   (optimize '({:VOL "anxious-roughneck-80", :DEPART 3, :DUREE 4, :PRIX 5}
               {:VOL "puzzled-wharf-81", :DEPART 3, :DUREE 9, :PRIX 15}
               {:VOL "quick-buddy-93", :DEPART 1, :DUREE 2, :PRIX 5}
@@ -63,11 +63,11 @@
              {:VOL "careful-karaoke-87"          :DEPART 20  :DUREE 4 :PRIX 12}
              {:VOL "homeless-radiotherapy-20"    :DEPART 21  :DUREE 2 :PRIX 9}
              {:VOL "silly-sarcasm-56"            :DEPART 22  :DUREE 6 :PRIX 3}
-             {:VOL "hollow-photography-8"        :DEPART 24  :DUREE 5 :PRIX 12}]) => {:gain 88
+             {:VOL "hollow-photography-8"        :DEPART 24  :DUREE 5 :PRIX 12}]) => {:gain 103
                                                                                       :path ["resonant-unit-62"
-                                                                                             "fancy-tambourine-7"
+                                                                                             "pleasant-sabotage-94"
                                                                                              "obedient-bar-55"
-                                                                                             "embarrassed-composer-15"
+                                                                                             "gleaming-standby-50"
                                                                                              "tiny-wife-86"
                                                                                              "hollow-photography-8"]})
 
@@ -242,7 +242,7 @@
              {:VOL "jolly-cheetah-26"            :DEPART 167 :DUREE 6 :PRIX 3}
              {:VOL "outrageous-quid-75"          :DEPART 169 :DUREE 5 :PRIX 13}
              {:VOL "ancient-accelerator-21"      :DEPART 170 :DUREE 2 :PRIX 17}
-             {:VOL "enchanting-pilnnnlowcase-66"    :DEPART 170 :DUREE 4 :PRIX 9}
+             {:VOL "enchanting-pilnnnlowcase-66" :DEPART 170 :DUREE 4 :PRIX 9}
              {:VOL "itchy-karate-2"              :DEPART 171 :DUREE 2 :PRIX 2}
              {:VOL "hilarious-cutoffs-38"        :DEPART 172 :DUREE 6 :PRIX 1}
              {:VOL "inquisitive-metro-31"        :DEPART 174 :DUREE 5 :PRIX 17}
@@ -321,4 +321,4 @@
              {:VOL "voiceless-sophomore-70"      :DEPART 246 :DUREE 2 :PRIX 2}
              {:VOL "victorious-syrup-33"         :DEPART 247 :DUREE 6 :PRIX 2}
              {:VOL "powerful-motorist-28"        :DEPART 249 :DUREE 5 :PRIX 18}
-             {:VOL "confused-sterilization-85"   :DEPART 250 :DUREE 2 :PRIX 28}]) => {:gain 745, :path ["resonant-unit-62" "fancy-tambourine-7" "obedient-bar-55" "embarrassed-composer-15" "tiny-wife-86" "quiet-respirator-69" "fragile-visibility-28" "bored-patio-58" "helpful-rye-48" "proud-performer-72" "determined-typhoid-97" "noisy-narrator-1" "filthy-lubricant-11" "beautiful-sleepwalker-49" "fancy-ammunition-84" "resonant-loudmouth-53" "tough-interpreter-23" "ill-pedestal-66" "open-tourist-23" "short-throwback-58" "naughty-connoisseur-12" "talented-scrubber-60" "chubby-punch-28" "shallow-puzzle-4" "super-quarterback-71" "inquisitive-dessert-89" "scrawny-muzzle-77" "aggressive-ballerina-21" "sparkling-stove-10" "poor-drunk-56" "clumsy-radiologist-58" "screeching-condo-4" "thoughtless-windmill-9" "late-ring-4" "outrageous-quid-75" "inquisitive-metro-31" "angry-rodent-98" "condemned-sequel-76" "resonant-chip-72" "clumsy-congress-66" "wandering-pasteboard-75" "kind-knapsack-80" "wandering-stepladder-94" "scrawny-boat-42" "combative-rabies-27" "quaint-magnesium-29" "splendid-plan-32" "drab-ink-48" "busy-snail-31" "light-stereo-78" "powerful-motorist-28"]})
+             {:VOL "confused-sterilization-85"   :DEPART 250 :DUREE 2 :PRIX 28}]) => {:gain 918, :path ["resonant-unit-62" "pleasant-sabotage-94" "obedient-bar-55" "gleaming-standby-50" "tiny-wife-86" "quiet-respirator-69" "spotless-uniform-50" "expensive-petal-39" "eager-ump-31" "young-pawnbroker-17" "thoughtless-mascara-25" "noisy-narrator-1" "zany-eve-38" "beautiful-sleepwalker-49" "excited-theory-66" "resonant-loudmouth-53" "tough-interpreter-23" "square-medalist-41" "open-tourist-23" "chubby-burger-30" "naughty-connoisseur-12" "motionless-wrinkle-34" "chubby-punch-28" "shallow-puzzle-4" "stupid-babbler-56" "inquisitive-dessert-89" "scrawny-muzzle-77" "aggressive-ballerina-21" "sparkling-stove-10" "poor-drunk-56" "smiling-gut-68" "screeching-condo-4" "annoying-seashell-48" "late-ring-4" "ancient-accelerator-21" "inquisitive-metro-31" "angry-rodent-98" "condemned-sequel-76" "open-sparrow-92" "clumsy-congress-66" "flat-blob-65" "kind-knapsack-80" "repulsive-cook-69" "scrawny-boat-42" "combative-rabies-27" "delightful-lightning-45" "splendid-plan-32" "hushed-camouflage-5" "successful-squalor-64" "short-curve-96" "confused-sterilization-85"]})
