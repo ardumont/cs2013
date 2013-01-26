@@ -32,7 +32,7 @@
              {:VOL "AF2" :DEPART 4 :DUREE 1 :PRIX 4}
              {:VOL "AF3" :DEPART 2 :DUREE 1 :PRIX 6}]) => {:gain 12 :path ["AF1" "AF3" "AF2"]})
 
-(fact
+(future-fact
   (optimize '({:VOL "anxious-roughneck-80", :DEPART 3, :DUREE 4, :PRIX 5}
               {:VOL "puzzled-wharf-81", :DEPART 3, :DUREE 9, :PRIX 15}
               {:VOL "quick-buddy-93", :DEPART 1, :DUREE 2, :PRIX 5}

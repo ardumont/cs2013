@@ -65,23 +65,21 @@
 ;;  {"DUREE" 9, "PRIX" 8, "VOL" "LEGACY01", "DEPART" 5}
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
-(defn nodes-and-adjacents
+(defn adjacents
   "Compute the nodes data (group by identity, the unique id VOL)"
   [vm]
   (reduce
-   (fn [[nds adjs] {:keys [VOL DEPART DUREE] :as node}]
-     (let [potential-adjs (filter (comp
-                                   (partial <= (+ DEPART DUREE))
-                                   :DEPART)
-                                  vm)]
-       [(assoc nds  VOL node)
-        (assoc adjs VOL (map :VOL potential-adjs))]))
-   [{} {}]
+   (fn [adjs {:keys [DEPART DUREE] :as node}]
+     (assoc adjs node (filter (comp
+                               (partial <= (+ DEPART DUREE))
+                               :DEPART)
+                              vm)))
+   {}
    vm))
 
 (defn build-tree
   "breadth-first lazily building the tree"
-  [nds adjs root-node]
+  [adjs root-node]
   ((fn next-elt [queue]
      (lazy-seq
       (when (seq queue)
@@ -90,11 +88,10 @@
                              :id
                              adjs
                              (map (comp
-                                   (fn [{:keys [VOL PRIX]}]
-                                     {:id VOL
+                                   (fn [{:keys [VOL PRIX] :as node}]
+                                     {:id node
                                       :gain (+ gain PRIX)
-                                      :path (conj path VOL)})
-                                   nds)))]
+                                      :path (conj path VOL)}))))]
           (cons node (->> children
                           (into (pop queue))
                           next-elt))))))
@@ -102,8 +99,8 @@
 
 (defn build-tree-root
   "Begin the building of the tree"
-  [nds adjs {:keys [VOL PRIX]}]
-  (build-tree nds adjs {:id VOL :gain PRIX :path [VOL]}))
+  [adjs {:keys [VOL PRIX] :as node}]
+  (build-tree adjs {:id node :gain PRIX :path [VOL]}))
 
 (defn best-path
   "Compute the best paths from a list of path"
@@ -114,7 +111,7 @@
 (defn optimize
   "Entry point for the second problem"
   [vm]
-  (let [[nds adjs] (nodes-and-adjacents vm)]
+  (let [adjs (adjacents vm)]
     (->> vm
-         (mapcat (comp (partial build-tree-root nds adjs)))
+         (mapcat (partial build-tree-root adjs))
          best-path)))
