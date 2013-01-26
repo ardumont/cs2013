@@ -87,11 +87,10 @@
               children  (->> node
                              :id
                              adjs
-                             (map (comp
-                                   (fn [{:keys [VOL PRIX] :as node}]
-                                     {:id node
-                                      :gain (+ gain PRIX)
-                                      :path (conj path VOL)}))))]
+                             (map (fn [{:keys [VOL PRIX] :as node}]
+                                    {:id node
+                                     :gain (+ gain PRIX)
+                                     :path (conj path VOL)})))]
           (cons node (->> children
                           (into (pop queue))
                           next-elt))))))
