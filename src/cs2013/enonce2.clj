@@ -80,7 +80,7 @@
   ((fn next-elt [queue]
      (lazy-seq
       (when (seq queue)
-        (let [{:keys [id gain path] :as node} (peek queue)
+        (let [{:keys [gain path] :as node} (peek queue)
               children (for [{:keys [VOL PRIX] :as node} (->> node :id adjs)
                              :let [g (+ gain PRIX)
                                    p (conj path VOL)]]
