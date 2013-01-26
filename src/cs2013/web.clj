@@ -128,6 +128,7 @@
         (-> req
             read-json-post-body
             utils/keyify
+            t/trace
             e2/optimize ;; main algo for second problem
             t/trace
             json/write-str
