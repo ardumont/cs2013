@@ -33,6 +33,13 @@
              {:VOL "AF3" :DEPART 2 :DUREE 1 :PRIX 6}]) => {:gain 12 :path ["AF1" "AF3" "AF2"]})
 
 (fact
+  (optimize '({:VOL "anxious-roughneck-80", :DEPART 3, :DUREE 4, :PRIX 5}
+              {:VOL "puzzled-wharf-81", :DEPART 3, :DUREE 9, :PRIX 15}
+              {:VOL "quick-buddy-93", :DEPART 1, :DUREE 2, :PRIX 5}
+              {:VOL "poor-ukulele-38", :DEPART 3, :DUREE 6, :PRIX 12}
+              {:VOL "jealous-griddlecake-82", :DEPART 4, :DUREE 15, :PRIX 7})) => {:path ["quick-buddy-93" "puzzled-wharf-81"], :gain 20})
+
+(fact
   (optimize [{:VOL "resonant-unit-62"            :DEPART 0   :DUREE 4 :PRIX 15}
              {:VOL "sparkling-ragweed-28"        :DEPART 1   :DUREE 2 :PRIX 1}
              {:VOL "nice-videodisc-57"           :DEPART 2   :DUREE 6 :PRIX 1}

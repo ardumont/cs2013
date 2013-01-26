@@ -96,6 +96,13 @@
              {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
              {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]) => {:gain 18 :path ["MONAD42" "LEGACY01"]})
 
+(fact
+  (optimize '({:VOL "anxious-roughneck-80", :DEPART 3, :DUREE 4, :PRIX 5}
+              {:VOL "puzzled-wharf-81", :DEPART 3, :DUREE 9, :PRIX 15}
+              {:VOL "quick-buddy-93", :DEPART 1, :DUREE 2, :PRIX 5}
+              {:VOL "poor-ukulele-38", :DEPART 3, :DUREE 6, :PRIX 12}
+              {:VOL "jealous-griddlecake-82", :DEPART 4, :DUREE 15, :PRIX 7})) => {:path ["quick-buddy-93" "puzzled-wharf-81"], :gain 20})
+
 (comment
   (doseq [i (range 100)]
     (time
