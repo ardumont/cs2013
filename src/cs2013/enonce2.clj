@@ -108,9 +108,8 @@
 (defn best-path
   "Compute the best paths from a list of path"
   [gain-paths]
-  (let [fbest (apply max-key :gain gain-paths)]
-    {:gain (:gain fbest)
-     :path (:path fbest)}))
+  (-> (apply max-key :gain gain-paths)
+      (select-keys [:gain :path])))
 
 (defn optimize
   "Entry point for the second problem"
