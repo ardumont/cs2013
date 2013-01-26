@@ -66,7 +66,7 @@
 ;;  {"DUREE" 9, "PRIX" 7, "VOL" "YAGNI17", "DEPART" 5}]
 
 (defn adjacents
-  "Compute the nodes data (group by identity, the unique id VOL)"
+  "Compute the adjacent nodes once and for all for each existing node."
   [vm]
   (reduce
    (fn [adjs {:keys [DEPART DUREE] :as node}]
