@@ -81,10 +81,10 @@
      (lazy-seq
       (when (seq queue)
         (let [{:keys [id gain path] :as node} (peek queue)
-              children (for [{:keys [VOL PRIX] :as node} (->> node :id adjs)]
-                         {:id node
-                          :gain (+ gain PRIX)
-                          :path (conj path VOL)})]
+              children (for [{:keys [VOL PRIX] :as node} (->> node :id adjs)
+                             :let [g (+ gain PRIX)
+                                   p (conj path VOL)]]
+                         {:id node :gain g :path p})]
           (cons node (->> children
                           (into (pop queue))
                           next-elt))))))
