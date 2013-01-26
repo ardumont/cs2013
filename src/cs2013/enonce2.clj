@@ -70,10 +70,7 @@
   [vm]
   (reduce
    (fn [adjs {:keys [DEPART DUREE] :as node}]
-     (assoc adjs node (filter (comp
-                               (partial <= (+ DEPART DUREE))
-                               :DEPART)
-                              vm)))
+     (assoc adjs node (filter (comp (partial <= (+ DEPART DUREE)) :DEPART) vm)))
    {}
    vm))
 
