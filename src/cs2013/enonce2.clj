@@ -76,24 +76,19 @@
 
 (defn build-tree
   "breadth-first lazily building the tree"
-  [adjs root-node]
+  [adjs {:keys [VOL PRIX] :as root-node}]
   ((fn next-elt [queue]
      (lazy-seq
       (when (seq queue)
         (let [{:keys [gain path] :as node} (peek queue)
-              children (for [{:keys [VOL PRIX] :as node} (->> node :id adjs)
-                             :let [g (+ gain PRIX)
-                                   p (conj path VOL)]]
-                         {:id node :gain g :path p})]
+              children (for [nd-ch (->> node :id adjs)]
+                         {:id nd-ch
+                          :gain (+ gain (:PRIX nd-ch))
+                          :path (conj path (:VOL nd-ch))})]
           (cons node (->> children
                           (into (pop queue))
                           next-elt))))))
-   (conj clojure.lang.PersistentQueue/EMPTY root-node)))
-
-(defn build-tree-root
-  "Begin the building of the tree"
-  [adjs {:keys [VOL PRIX] :as node}]
-  (build-tree adjs {:id node :gain PRIX :path [VOL]}))
+   (conj clojure.lang.PersistentQueue/EMPTY {:id root-node :gain PRIX :path [VOL]})))
 
 (defn best-path
   "Compute the best paths from a list of path"
@@ -106,5 +101,5 @@
   [vm]
   (let [adjs (adjacents vm)]
     (->> vm
-         (mapcat (partial build-tree-root adjs))
+         (mapcat (partial build-tree adjs))
          best-path)))
