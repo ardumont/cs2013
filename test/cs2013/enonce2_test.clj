@@ -13,6 +13,30 @@
                                                                                                                 {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]
                                                                  {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7} ()})
 
+(fact
+  (mkroot-node {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}) => {:id {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                                                                 :gain 8
+                                                                 :path ["LEGACY01"]})
+
+(fact
+  (mkc {{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14} ()
+        {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8} ()
+        {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10} [{:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                                                       {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]
+        {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7} ()}
+       {:id {:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14}}) => '())
+
+(fact
+  (mkc {{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14} ()
+        {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8} ()
+        {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10} [{:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8}
+                                                       {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7}]
+        {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7} ()}
+       {:id {:VOL "MONAD42"  :DEPART 0 :DUREE 5 :PRIX 10}
+        :gain 10
+        :path ["some-entry"]}) => [{:id {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8} :gain 18 :path ["some-entry" "LEGACY01"]}
+                                   {:id {:VOL "YAGNI17"  :DEPART 5 :DUREE 9 :PRIX 7} :gain 17 :path ["some-entry" "YAGNI17"]}])
+
 (fact "Simple - Build a tree from a starting point."
   (build-tree {{:VOL "META18"   :DEPART 3 :DUREE 7 :PRIX 14} ()
                {:VOL "LEGACY01" :DEPART 5 :DUREE 9 :PRIX 8} ()
