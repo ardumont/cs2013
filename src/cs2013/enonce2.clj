@@ -74,21 +74,42 @@
    {}
    vm))
 
-(defn build-tree
-  "breadth-first lazily building the tree"
-  [adjs {:keys [VOL PRIX] :as root-node}]
+(defn mkroot-node
+  "Build the root node"
+  [{:keys [PRIX VOL] :as t}]
+  {:id t :gain PRIX :path [VOL]})
+
+(defn mkc
+  "Given an adjacent list and a node, build the children list of this node"
+  [adjs {:keys [gain path] :as node}]
+  (->> node
+       :id
+       adjs
+       (map (fn [nd-ch] {:id nd-ch
+                        :gain (+ gain (:PRIX nd-ch))
+                        :path (conj path (:VOL nd-ch))}))))
+
+(defn- bfs-build-tree
+  "Higher order function breadth-first lazily build tree
+- adjs is the list of adjacent nodes for each node of the tree
+- root-node is the node from which we depart
+- mkroot-node is the function that takes one root node and build the node according to the tree contract
+- mkc is the function that takes one adjacent list and one node and compute the adjacent nodes according to the tree contract."
+  [adjs root-node mkroot-node mkc]
   ((fn next-elt [queue]
      (lazy-seq
       (when (seq queue)
-        (let [{:keys [gain path] :as node} (peek queue)
-              children (for [nd-ch (->> node :id adjs)]
-                         {:id nd-ch
-                          :gain (+ gain (:PRIX nd-ch))
-                          :path (conj path (:VOL nd-ch))})]
+        (let [node (peek queue)
+              children (mkc adjs node)]
           (cons node (->> children
                           (into (pop queue))
                           next-elt))))))
-   (conj clojure.lang.PersistentQueue/EMPTY {:id root-node :gain PRIX :path [VOL]})))
+   (conj clojure.lang.PersistentQueue/EMPTY (mkroot-node root-node))))
+
+(defn build-tree
+  "Given an adjacent list and a root-node, build the depth first tree"
+  [adjs root-node]
+  (bfs-build-tree adjs root-node mkroot-node mkc))
 
 (defn best-path
   "Compute the best paths from a list of path"
