@@ -81,9 +81,8 @@
 
 (defn mkc
   "Given an adjacent list and a node, build the children list of this node"
-  [adjs {:keys [gain path] :as node}]
-  (->> node
-       :id
+  [adjs {:keys [gain path id]}]
+  (->> id
        adjs
        (map (fn [nd-ch] {:id nd-ch
                         :gain (+ gain (:PRIX nd-ch))
